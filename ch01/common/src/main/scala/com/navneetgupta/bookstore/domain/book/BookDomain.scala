@@ -2,7 +2,7 @@ package com.navneetgupta.bookstore.domain.book
 
 import java.util.Date
 
-case class Book(id: Int, title: String, author: String, cost: Double, inventoryAmount: Int, tags: List[String], createTs: Date, modifyTs: Date, deleted: Boolean)
+case class Book(id: Int, title: String, author: String, cost: Double, inventoryAmount: Int, tags: List[String], createTs: Date, modifyTs: Date, deleted: Boolean = false)
 
 case class FindBook(id: Int)
 case class FindBooksForId(ids: Seq[Int])
