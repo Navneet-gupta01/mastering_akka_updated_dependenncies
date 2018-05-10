@@ -7,6 +7,6 @@ object CreditTransactionStatus extends Enumeration {
 }
 
 case class CreditCardInfo(cardHolder: String, cardType: String, cardNumber: String, expiration: Date)
-case class CreditCardTransaction(id: Int, creditCardInfo: CreditCardInfo, amount: Double, status: CreditTransactionStatus.Value, confirmationCode: String, createTs: Date, modifyTs: Date)
+case class CreditCardTransaction(id: Int, creditCardInfo: CreditCardInfo, amount: Double, status: CreditTransactionStatus.Value, confirmationCode: Option[String], createTs: Date, modifyTs: Date)
 
 case class ChargeCreditCard(cardInfo: CreditCardInfo, amount: Double)

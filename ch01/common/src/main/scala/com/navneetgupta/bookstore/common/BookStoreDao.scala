@@ -22,8 +22,11 @@ trait BookStoreDao {
 object PostgresDb {
   import slick.driver.PostgresDriver.backend._
   private[common] var db: Database = _
-
+  val user = "postgres"
+  val url = "jdbc:postgresql://localhost:5432/akkaexampleapp"
+  val password = "postgres"
+  val driver = "org.postgresql.Driver"
   def init(conf: Config): Unit = {
-    db = Database.forConfig("psqldb", conf)
+    db = Database.forURL(url, user = user, password = password, driver = driver)
   }
 }

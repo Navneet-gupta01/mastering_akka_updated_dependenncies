@@ -10,7 +10,7 @@ case class FindBooksByTags(tags: Seq[String])
 case class FindBooksByTitle(title: String)
 case class FindBookByAuthor(author: String)
 
-case class CreateBook(title: String, author: String, tags: List[Int], cost: Double)
+case class CreateBook(title: String, author: String, tags: List[String], cost: Double)
 case class AddTagToBook(bookId: Int, tag: String)
 case class RemoveTagFromBook(bookId: Int, tag: String)
 case class AddInventoryToBook(bookId: Int, amount: Int)
