@@ -1,0 +1,1 @@
+name := "bookstore-server"
