@@ -69,8 +69,9 @@ class BookRepository(implicit ec: ExecutionContext) extends EntityRepository[Boo
 
   def findBookIdsByTags(tags: Seq[String]) = {
     println("Loading Book Entity for tags {}", tags)
+    println("Tags size is {}", tags.size)
     val tagsParam = tags.map(t => s"'${t.toLowerCase}'").mkString(",")
-    val idsWithAllTags = db.run(sql"select bookId, count(bookId) from BookTag where lower(tag) in (#$tagsParam) and not deleted group by bookId having count(bookId) = ${tags.size}".as[(Int, Int)])
+    val idsWithAllTags = db.run(sql"select bookId, count(bookId) from BookTag where lower(tag) in (#$tagsParam) group by bookId having count(bookId) = ${tags.size}".as[(Int, Int)])
     idsWithAllTags.map(_.map(_._1))
   }
 

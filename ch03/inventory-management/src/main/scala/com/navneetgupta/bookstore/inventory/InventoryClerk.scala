@@ -55,9 +55,9 @@ class InventoryClerk extends EntityAggregate[BookFO, Book] {
       val result = multiEntityLookup(repo.findBookIdsByTitle(title))
       pipeResponse(result)
 
-    case FindBooksByAuthor(title) =>
-      log.info("Finding book for title {}", title)
-      val result = multiEntityLookup(repo.findBookIdsByTitle(title))
+    case FindBooksByAuthor(author) =>
+      log.info("Finding book for author {}", author)
+      val result = multiEntityLookup(repo.findBookIdsByAuthor(author))
       pipeResponse(result)
     case CreateBook(title, author, tags, cost) =>
       log.info("Creating new book with title {}", title)

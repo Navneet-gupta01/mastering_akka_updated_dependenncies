@@ -34,6 +34,7 @@ class SalesOrderEndpoint(salesAssociate: ActorRef)(implicit override val ec: Exe
       respond(f, req)
     case req @ POST(Path(Seg("api" :: "order" :: Nil))) =>
       val createReq = parse(Body.string(req)).extract[CreateOrder]
+      println("Create Order Request Body is:  " + createReq)
       val f = (salesAssociate ? createReq)
       respond(f, req)
   }

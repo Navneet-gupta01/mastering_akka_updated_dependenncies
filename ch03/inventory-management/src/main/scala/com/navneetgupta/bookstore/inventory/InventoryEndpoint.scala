@@ -27,6 +27,7 @@ class InventoryEndpoint(inventoryClerk: ActorRef)(implicit override val ec: Exec
       val f = (inventoryClerk ? FindBook(bookId.toInt))
       respond(f, req)
     case req @ GET(Path(Seg("api" :: "book" :: Nil))) & Params(TagParam(tags)) =>
+      println("Tags to search is " + tags)
       val f = (inventoryClerk ? FindBooksByTags(tags))
       respond(f, req)
     case req @ GET(Path(Seg("api" :: "book" :: Nil))) & Params(AuthorParam(author)) =>

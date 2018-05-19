@@ -51,8 +51,10 @@ abstract class EntityActor[FO <: EntityFieldsObject[FO]](idInput: Int) extends B
 
   if (idInput == 0)
     startWith(Creating, NoData)
-  else
+  else {
     startWith(Initializing, InitializingData(idInput))
+    self ! Initialize
+  }
 
   when(Initializing) {
     case Event(Initialize, data: InitializingData) =>

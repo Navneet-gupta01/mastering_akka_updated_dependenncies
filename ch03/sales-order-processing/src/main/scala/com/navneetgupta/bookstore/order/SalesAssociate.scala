@@ -5,6 +5,8 @@ import com.navneetgupta.bookstore.common.EntityAggregate
 import com.navneetgupta.bookstore.inventory.InventoryClerk.InventoryAllocated
 import com.navneetgupta.bookstore.inventory.InventoryClerk.InventoryBackOrdered
 import com.navneetgupta.bookstore.common.EntityActor.GetFieldsObject
+import com.navneetgupta.bookstore.order.SalesOrder.CreateOrder
+import com.navneetgupta.bookstore.order.SalesOrder.UpdateOrderStatus
 
 object SalesAssociate {
   val Name = "sales-associate"
@@ -36,6 +38,18 @@ class SalesAssociate extends EntityAggregate[SalesOrderFO, SalesOrder] {
     case FindOrdersForUser(userId) =>
       val result = multiEntityLookup(repo.findOrderIdsForUser(userId))
       pipeResponse(result)
+
+    case req: CreateOrder =>
+      val agg = lookupOrCreateChild(0)
+      agg.forward(req)
+
+    case InventoryAllocated(id) =>
+      persistOperation(id,
+        UpdateOrderStatus(SalesOrderStatus.Approved))
+
+    case InventoryBackOrdered(id) =>
+      persistOperation(id,
+        UpdateOrderStatus(SalesOrderStatus.BackOrdered))
   }
 
   def entityProps(id: Int) = SalesOrder.props(id)
