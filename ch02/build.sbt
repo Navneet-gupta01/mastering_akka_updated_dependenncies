@@ -9,7 +9,7 @@ lazy val commonSettings = Seq(
 lazy val root = (project in file(".")).
   aggregate(common, bookServices, userServices, creditServices, orderServices, server)
 
-lazy val common = (project in file("common")).
+lazy val common = (project in file("ch02-common")).
   settings(commonSettings: _*)
 
 lazy val bookServices = (project in file("book-services")).

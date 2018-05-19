@@ -30,6 +30,7 @@ class BookRepository(implicit ec: ExecutionContext) extends EntityRepository[Boo
   }
 
   override def loadEntity(id: Int) = {
+    println("Loading Entity for id {}", id)
     val query = sql"""
       select b.id, b.title, b.author, array_to_string(array_agg(t.tag), ',') as tags, b.cost, b.inventoryAmount, b.createTs, b.modifyTs
       from Book b left join BookTag t on b.id = t.bookId where id = $id and not b.deleted group by b.id
@@ -38,6 +39,7 @@ class BookRepository(implicit ec: ExecutionContext) extends EntityRepository[Boo
   }
 
   override def persistEntity(book: BookFO): Future[Int] = {
+    println("Persisting Entity for")
     val insert =
       sqlu"""
         insert into Book (title, author, cost, inventoryamount, createts)
@@ -60,17 +62,20 @@ class BookRepository(implicit ec: ExecutionContext) extends EntityRepository[Boo
   }
 
   override def deleteEntity(id: Int): Future[Int] = {
+    println("Deleteing Entity for id {}", id)
     val bookDelete = sqlu"update Book set deleted = true where id = ${id}"
     db.run(bookDelete).map(_ => id)
   }
 
   def findBookIdsByTags(tags: Seq[String]) = {
+    println("Loading Book Entity for tags {}", tags)
     val tagsParam = tags.map(t => s"'${t.toLowerCase}'").mkString(",")
     val idsWithAllTags = db.run(sql"select bookId, count(bookId) from BookTag where lower(tag) in (#$tagsParam) and not deleted group by bookId having count(bookId) = ${tags.size}".as[(Int, Int)])
     idsWithAllTags.map(_.map(_._1))
   }
 
   def findBookIdsByAuthor(author: String) = {
+    println("Loading Book Entity for author {}", author)
     val param = s"%${author.toLowerCase}%"
     db
       .run(sql"""select id from Book where lower(author) like $param and not deleted""".as[Int])
@@ -78,6 +83,7 @@ class BookRepository(implicit ec: ExecutionContext) extends EntityRepository[Boo
 
   def findBookIdsByTitle(title: String) = {
     val param = s"%${title.toLowerCase}%"
+    println("Loading Book Entity for title {}", title)
     db
       .run(sql"""select id from Book where lower(title) like $param and not deleted""".as[Int])
   }

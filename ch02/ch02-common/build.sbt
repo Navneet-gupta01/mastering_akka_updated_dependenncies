@@ -1,4 +1,4 @@
-name := "common"
+name := "ch02-common"
 
 libraryDependencies ++= Seq(
 	"org.scalatest" %% "scalatest" % "3.0.1" % "test",

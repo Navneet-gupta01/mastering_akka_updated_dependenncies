@@ -60,6 +60,7 @@ abstract class EntityActor[FO <: EntityFieldsObject[FO]](idInput: Int) extends B
       repo.loadEntity(data.id).map(fo => Loaded(fo)) pipeTo self
       stay
     case Event(Loaded(Some(fo)), _) =>
+      log.info("Initialized state data {}", fo)
       unstashAll
       goto(Initialized) using InitializedData(fo)
     case Event(Loaded(None), data: InitializingData) =>
@@ -70,25 +71,44 @@ abstract class EntityActor[FO <: EntityFieldsObject[FO]](idInput: Int) extends B
       log.error(ex, "Error initializing {} {}, stopping", entityType, data.id)
       goto(FailedToLoad) using data
     case Event(NonStateTimeout(other), _) =>
+      log.info("NonStateTimeout from state Initializing {}", other)
       stash
       stay
   }
 
-  when(Missing, 1 second) {
+  when(Missing, 10 second) {
     case Event(GetFieldsObject, data: MissingData[FO]) =>
+      log.info("FO missing msg received GetFieldsObject state is Missing")
       val result = data.deleted.map(FullResult.apply).getOrElse(EmptyResult)
       sender ! result
       stay
 
     case Event(NonStateTimeout(other), _) =>
+      log.info("NonStateTimeout from state Missing")
       sender ! Failure(FailureType.Validation, ErrorMessage.InvalidEntityId)
       stay
   }
 
-  when(Initialized, 60 second)(standardInitializedHandling orElse initializedHandling)
+  when(Creating)(customCreateHandling orElse standardCreateHandling)
+
+  def customCreateHandling: StateFunction = PartialFunction.empty
+
+  def standardCreateHandling: StateFunction = {
+    case Event(fo: FO, _) =>
+      createAndRequestFO(fo)
+    case Event(FinishCreate(fo: FO), _) =>
+      createAndRequestFO(fo)
+    case Event(Status.Failure(ex), _) =>
+      log.error(ex, "Failed to create a new entity of type {}", entityType)
+      val fail = mapError(ex)
+      goto(Missing) using MissingData(0) replying (fail)
+  }
+
+  when(Initialized, 600 second)(standardInitializedHandling orElse initializedHandling)
 
   def standardInitializedHandling: StateFunction = {
     case Event(GetFieldsObject, InitializedData(fo)) =>
+      log.info("Event GetFieldsObject in state Initialized")
       sender ! FullResult(fo)
       stay
 
@@ -124,25 +144,10 @@ abstract class EntityActor[FO <: EntityFieldsObject[FO]](idInput: Int) extends B
       stay
   }
 
-  when(FailedToLoad, 1 second) {
+  when(FailedToLoad, 5 second) {
     case Event(NonStateTimeout(other), _) =>
       sender ! Failure(FailureType.Service, ServiceResult.UnexpectedFailure)
       stay
-  }
-
-  when(Creating)(customCreateHandling orElse standardCreateHandling)
-
-  def customCreateHandling: StateFunction = PartialFunction.empty
-
-  def standardCreateHandling: StateFunction = {
-    case Event(fo: FO, _) =>
-      createAndRequestFO(fo)
-    case Event(FinishCreate(fo: FO), _) =>
-      createAndRequestFO(fo)
-    case Event(Status.Failure(ex), _) =>
-      log.error(ex, "Failed to create a new entity of type {}", entityType)
-      val fail = mapError(ex)
-      goto(Missing) using MissingData(0) replying (fail)
   }
 
   def createAndRequestFO(fo: FO) = {
@@ -181,6 +186,7 @@ trait EntityFieldsObject[FO] {
 abstract class EntityAggregate[FO <: EntityFieldsObject[FO], E <: EntityActor[FO]: ClassTag] extends BookstoreActor {
   def lookupOrCreateChild(id: Int): ActorRef = {
     val name = entityActorName(id)
+    log.info("name Of Actor is {}", name)
     context.child(name).getOrElse {
       log.info("Creating new {} actor to handle a request for id {}", entityName, id)
       if (id > 0)
@@ -191,6 +197,7 @@ abstract class EntityAggregate[FO <: EntityFieldsObject[FO], E <: EntityActor[FO
   }
 
   def persistOperation(id: Int, msg: Any) {
+    log.info("persistOperation for ID {} is with msg {}", id, msg)
     val entity = lookupOrCreateChild(id)
     entity.forward(msg)
   }
@@ -198,11 +205,13 @@ abstract class EntityAggregate[FO <: EntityFieldsObject[FO], E <: EntityActor[FO
   def askForFo(bookActor: ActorRef) = {
     import akka.pattern.ask
     import concurrent.duration._
+    log.info("AskForFO for actor : {}", bookActor.path)
     implicit val timeout = Timeout(5 seconds)
     (bookActor ? EntityActor.GetFieldsObject).mapTo[ServiceResult[FO]]
   }
 
   def multiEntityLookup(f: => Future[Vector[Int]])(implicit ex: ExecutionContext) = {
+    log.info("multiEntityLookup for actor")
     for {
       ids <- f
       actors = ids.map(lookupOrCreateChild)
@@ -219,6 +228,7 @@ abstract class EntityAggregate[FO <: EntityFieldsObject[FO], E <: EntityActor[FO
     entityTag.runtimeClass.getSimpleName()
   }
   private def entityActorName(id: Int) = {
+    log.info(s"entityName.toLowerCase: ${entityName.toLowerCase}");
     s"${entityName.toLowerCase}-$id"
   }
 
