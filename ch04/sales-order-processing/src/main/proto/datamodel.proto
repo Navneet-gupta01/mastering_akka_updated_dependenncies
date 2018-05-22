@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+option java_package = "com.navneetgupta.bookstore.order";
+option java_outer_classname = "Datamodel";
+option optimize_for = SPEED;
+
+message SalesOrderLineItem{
+  int32 lineItemNumber = 1;
+  string bookId = 2;
+  int32 quantity = 3;
+  double cost = 4;
+} 
+ 
+message SalesOrder {
+  string id = 1;
+  string userId = 2;
+  string creditTxnId = 3;
+  repeated SalesOrderLineItem lineItem = 4;
+  string status = 5;
+  int64 createTs = 6;
+  int64 modifyTs = 7;
+  double totalCost = 8;
+}
+
+message OrderCreated{
+  SalesOrder order = 1;
+}
+
+message OrderStatusUpdated{
+  string status = 1;
+}

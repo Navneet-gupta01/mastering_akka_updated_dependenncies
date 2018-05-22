@@ -1,57 +1,68 @@
 package com.navneetgupta.bookstore.users
 
-import com.navneetgupta.bookstore.common.EntityAggregate
 import akka.actor.Props
 import com.navneetgupta.bookstore.users.User.UserInput
 import java.util.Date
-import com.navneetgupta.bookstore.users.User.UpdateUserInfo
+import com.navneetgupta.bookstore.common.PersistentEntity.GetState
+import akka.util.Timeout
+import com.navneetgupta.bookstore.common._
+import com.navneetgupta.bookstore.common.PersistentEntity.MarkAsDeleted
 
 object CustomerRelationsManager {
   def props = Props[CustomerRelationsManager]
   val Name = "customer-relations-manager"
 
   //Lookup Operations
-  case class FindUserById(id: Int)
   case class FindUserByEmail(email: String)
 
   //Modify operations
-  case class CreateUser(input: UserInput)
-  case class UpdateUser(id: Int, input: UserInput)
-  case class DeleteUser(userId: Int)
+  case class CreateUserInput(email: String, firstName: String, lastName: String)
+  case class CreateUser(input: CreateUserInput)
+  case class UpdateUser(email: String, input: UserInput)
+  case class DeleteUser(email: String)
 
+  val EmailNotUniqueError = ErrorMessage("user.email.nonunique", Some("The email supplied for a create or update is not unique"))
   //Events
 }
 
-class CustomerRelationsManager extends EntityAggregate[UserFO, User] {
+class CustomerRelationsManager extends Aggregate[UserFO, User] {
 
   import CustomerRelationsManager._
   import context.dispatcher
   import com.navneetgupta.bookstore.common.EntityActor._
+  import scala.concurrent.duration._
+  import akka.pattern.ask
+  import User._
 
-  val repo = new UserRepository
+  //val repo = new UserRepository
 
   override def receive = {
-    case FindUserById(id) =>
-      log.info("Finding User {}", id)
-      val user = lookupOrCreateChild(id)
-      user.forward(GetFieldsObject)
     case FindUserByEmail(email) =>
       log.info("Finding User by email {}", email)
-      val result =
-        for {
-          id <- repo.findUserIdByEmail(email)
-          user = lookupOrCreateChild(id.getOrElse(0))
-          vo <- askForFo(user)
-        } yield vo
-      pipeResponse(result)
+      val user = lookupOrCreateChild(email)
+      forwardCommand(email, GetState)
     case CreateUser(input) =>
-      val vo = UserFO(0, input.firstName, input.lastName, input.email, new Date, new Date)
-      persistOperation(vo.id, vo)
-    case UpdateUser(id, input) =>
-      persistOperation(id, UpdateUserInfo(input))
-    case DeleteUser(userId) =>
-      persistOperation(userId, Delete)
+      val user = lookupOrCreateChild(input.email)
+      implicit val timeout = Timeout(5 seconds)
+      val stateFut = (user ? GetState).mapTo[ServiceResult[UserFO]]
+      val caller = sender()
+      stateFut onComplete {
+        case util.Success(FullResult(user)) =>
+          caller ! Failure(FailureType.Validation, EmailNotUniqueError)
+
+        case util.Success(EmptyResult) =>
+          val fo = UserFO(input.email, input.firstName, input.lastName, new Date, new Date)
+          user.tell(Command.CreateUser(fo), caller)
+
+        case _ =>
+          caller ! Failure(FailureType.Service, ServiceResult.UnexpectedFailure)
+      }
+    case UpdateUser(email, input) =>
+      forwardCommand(email, Command.UpdatePersonalInfo(input))
+
+    case DeleteUser(email) =>
+      forwardCommand(email, MarkAsDeleted)
   }
 
-  override def entityProps(id: Int): akka.actor.Props = User.props(id)
+  override def entityProps(email: String): akka.actor.Props = User.props(email)
 }

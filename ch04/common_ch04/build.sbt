@@ -18,7 +18,7 @@ libraryDependencies ++= Seq(
         "com.typesafe.akka" %% "akka-persistence-cassandra" % "0.84",
   		"com.typesafe.akka" %% "akka-persistence-cassandra-launcher" % "0.84" % Test,
         "net.databinder.dispatch" %% "dispatch-core" % "0.13.3",
-        "com.google.protobuf" % "protobuf-java" % "2.4.1"
+        "com.google.protobuf" % "protobuf-java" % "3.5.1"
 )
 
 dependencyOverrides ++= Seq(

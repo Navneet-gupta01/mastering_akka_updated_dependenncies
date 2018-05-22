@@ -11,7 +11,9 @@ import akka.persistence.SaveSnapshotSuccess
 import akka.actor.Props
 import akka.actor.PoisonPill
 
-trait EntityEvent extends Serializable
+trait EntityEvent extends Serializable {
+  def currentVersion = "V1"
+}
 
 object PersistentEntity {
   case object GetState
