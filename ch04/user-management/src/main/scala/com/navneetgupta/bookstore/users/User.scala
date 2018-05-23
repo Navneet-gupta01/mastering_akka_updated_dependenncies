@@ -39,6 +39,7 @@ object User {
   object Event {
     case class UserCreated(user: UserFO) extends EntityEvent {
       def toDatamodel = {
+        println("To DataModel UserCreated")
         val userDm = Datamodel.BookstoreUser.newBuilder().
           setEmail(user.email).
           setFirstName(user.firstName).
@@ -54,37 +55,47 @@ object User {
     }
     object UserCreated extends DatamodelReader {
       def fromDatamodel = {
+
         case dm: Datamodel.UserCreated =>
+          println("From DataModel UserCreated")
           val user = dm.getUser()
           UserCreated(UserFO(user.getEmail(), user.getFirstName(), user.getLastName(), new Date(user.getCreateTs()), new Date(user.getModifyTs()), user.getDeleted()))
       }
     }
 
     case class PersonalInfoUpdated(firstName: String, lastName: String) extends EntityEvent {
-      def toDatamodel = Datamodel.PersonalInfoUpdated.newBuilder().
-        setFirstName(firstName).
-        setLastName(lastName).
-        setModifyTs(new Date().getTime).
-        build
+      def toDatamodel = {
+        println("To DataModel PersonalInfoUpdated")
+        Datamodel.PersonalInfoUpdated.newBuilder().
+          setFirstName(firstName).
+          setLastName(lastName).
+          setModifyTs(new Date().getTime).
+          build
+      }
     }
 
     object PersonalInfoUpdated extends DatamodelReader {
       def fromDatamodel = {
         case dm: Datamodel.PersonalInfoUpdated =>
+          println("From DataModel PersonalInfoUpdated")
           PersonalInfoUpdated(dm.getFirstName(), dm.getLastName())
       }
     }
 
     case class UserDeleted(email: String) extends EntityEvent {
-      def toDatamodel = Datamodel.UserDeleted.newBuilder().
-        setEmail(email).
-        setModifyTs(new Date().getTime). // Not needed since events are alreay there for the time at which they are called
-        build
+      def toDatamodel = {
+        println("To DataModel UserDeleted")
+        Datamodel.UserDeleted.newBuilder().
+          setEmail(email).
+          setModifyTs(new Date().getTime). // Not needed since events are alreay there for the time at which they are called
+          build
+      }
     }
 
     object UserDeleted extends DatamodelReader {
       def fromDatamodel = {
         case dm: Datamodel.UserDeleted =>
+          println("From DataModel UserDeleted")
           UserDeleted(dm.getEmail())
       }
     }

@@ -11,9 +11,7 @@ import akka.persistence.SaveSnapshotSuccess
 import akka.actor.Props
 import akka.actor.PoisonPill
 
-trait EntityEvent extends Serializable {
-  def currentVersion = "V1"
-}
+trait EntityEvent extends Serializable with DatamodelWriter
 
 object PersistentEntity {
   case object GetState

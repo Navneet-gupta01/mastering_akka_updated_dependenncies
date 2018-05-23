@@ -9,29 +9,23 @@ import akka.serialization.SerializerWithStringManifest
 class JsonSerializer extends SerializerWithStringManifest {
   implicit val formats = Serialization.formats(NoTypeHints)
   override def identifier: Int = 999
-  override def manifest(o: AnyRef): String = {
-    val className = o.getClass.getName
-    val version = o match {
-      case event: EntityEvent => event.currentVersion
-      case other              => "V1"
-    }
-    s"$version,$className"
-  }
+  override def manifest(o: AnyRef): String = o.getClass.getName
+
   override def toBinary(o: AnyRef): Array[Byte] = {
     val json = write(o)
     json.getBytes()
   }
   override def fromBinary(bytes: Array[Byte], manifest: String): AnyRef = {
-    //    val m = Manifest.classType[AnyRef](Class.forName(manifest))
-    //    val json = new String(bytes, "utf8")
-    //    read[AnyRef](json)(formats, m)
-    val Array(ver, clazz) = manifest.split(",")
-    val versionedClazz =
-      util.Try(Class.forName(s"$clazz$ver")).getOrElse {
-        Class.forName(clazz)
-      }
-    val m = Manifest.classType[AnyRef](versionedClazz)
+    val m = Manifest.classType[AnyRef](Class.forName(manifest))
     val json = new String(bytes, "utf8")
     read[AnyRef](json)(formats, m)
+    //    val Array(ver, clazz) = manifest.split(",")
+    //    val versionedClazz =
+    //      util.Try(Class.forName(s"$clazz$ver")).getOrElse {
+    //        Class.forName(clazz)
+    //      }
+    //    val m = Manifest.classType[AnyRef](versionedClazz)
+    //    val json = new String(bytes, "utf8")
+    //    read[AnyRef](json)(formats, m)
   }
 }

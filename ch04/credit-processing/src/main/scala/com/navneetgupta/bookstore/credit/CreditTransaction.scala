@@ -38,6 +38,7 @@ object CreditTransaction {
   object Event {
     case class CreditTransactionCreated(txn: CreditCardTransactionFO) extends EntityEvent {
       def toDatamodel = {
+        println("To DataModel CreditTransactionCreated")
         val cardInfoDm = Datamodel.CreditCardInfo.newBuilder().
           setCardHolder(txn.cardInfo.cardHolder).
           setCardNumber(txn.cardInfo.cardNumber).
@@ -53,6 +54,7 @@ object CreditTransaction {
           setStatus(txn.status.toString)
 
         txn.confirmationCode.foreach(c => builder.setConfirmationCode(c))
+
         Datamodel.CreditTransactionCreated.newBuilder().
           setTxn(builder.build).
           build
@@ -61,6 +63,7 @@ object CreditTransaction {
     object CreditTransactionCreated extends DatamodelReader {
       def fromDatamodel = {
         case dm: Datamodel.CreditTransactionCreated =>
+          println("From DataModel CreditTransactionCreated")
           val txnDm = dm.getTxn()
           val cardInfoDm = txnDm.getCardInfo()
           val conf =

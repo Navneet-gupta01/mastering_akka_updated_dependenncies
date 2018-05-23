@@ -16,6 +16,8 @@ class ProtobufDatamodelAdapter extends EventAdapter {
     event match {
       case m: Message =>
         val reader = Class.forName(manifest + "$").getField("MODULE$").get(null).asInstanceOf[DatamodelReader]
+        println("reader is:  " + reader.toString())
+        println(m)
         reader.
           fromDatamodel.
           lift(m).
@@ -27,7 +29,10 @@ class ProtobufDatamodelAdapter extends EventAdapter {
   }
 
   // Members declared in akka.persistence.journal.WriteEventAdapter
-  override def manifest(event: Any): String = event.getClass.getSimpleName
+  override def manifest(event: Any): String = {
+    println("event.getClass.getName: " + event.getClass.getName)
+    event.getClass.getName
+  }
 
   override def toJournal(event: Any): Any = event match {
     case wr: DatamodelWriter => wr.toDatamodel

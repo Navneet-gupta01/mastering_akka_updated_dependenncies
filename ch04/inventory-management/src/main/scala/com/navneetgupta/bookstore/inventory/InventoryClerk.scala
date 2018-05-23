@@ -9,6 +9,7 @@ import scala.concurrent.Future
 import com.navneetgupta.bookstore.common.Aggregate
 import java.util.UUID
 import com.navneetgupta.bookstore.common.PersistentEntity.MarkAsDeleted
+import com.navneetgupta.bookstore.common.PersistentEntity.GetState
 
 object InventoryClerk {
   def props = Props[InventoryClerk]
@@ -48,7 +49,7 @@ class InventoryClerk extends Aggregate[BookFO, Book] {
     case FindBook(id) =>
       log.info("Finding book {}", id)
       val book = lookupOrCreateChild(id)
-      book.forward(GetFieldsObject)
+      book.forward(GetState)
     //    case FindBooksByTags(tags) =>
     //      log.info("Finding books for tags {}", tags)
     //      val result = multiEntityLookup(repo.findBookIdsByTags(tags))

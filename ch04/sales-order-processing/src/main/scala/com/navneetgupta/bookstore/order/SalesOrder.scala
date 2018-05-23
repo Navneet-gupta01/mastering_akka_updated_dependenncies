@@ -28,6 +28,7 @@ import com.navneetgupta.bookstore.common.PersistentEntity
 import com.navneetgupta.bookstore.common.EntityEvent
 import com.navneetgupta.bookstore.order.Datamodel._
 import com.navneetgupta.bookstore.common.DatamodelReader
+import com.navneetgupta.bookstore.users.UserFO
 
 object SalesOrderStatus extends Enumeration {
   val InProgress, Approved, BackOrdered, Cancelled = Value
@@ -58,6 +59,7 @@ object SalesOrder {
   object Event {
     case class OrderCreated(order: SalesOrderFO) extends EntityEvent {
       def toDatamodel = {
+        println("To DataModel OrderCreated")
         val lineItemsDm = order.lineItems.map { item =>
           Datamodel.SalesOrderLineItem.newBuilder().
             setBookId(item.bookId).
@@ -84,6 +86,7 @@ object SalesOrder {
     object OrderCreated extends DatamodelReader {
       def fromDatamodel = {
         case doc: Datamodel.OrderCreated =>
+          println("From DataModel OrderCreated")
           val dmo = doc.getOrder()
           val items = dmo.getLineItemList().map { item =>
             SalesOrderLineItemFO(item.getLineItemNumber(), item.getBookId(), item.getQuantity(), item.getCost())
@@ -94,13 +97,17 @@ object SalesOrder {
       }
     }
     case class OrderStatusUpdated(status: SalesOrderStatus.Value) extends EntityEvent {
-      def toDatamodel = Datamodel.OrderStatusUpdated.newBuilder().
-        setStatus(status.toString).
-        build
+      def toDatamodel = {
+        println("To DataModel OrderStatusUpdated")
+        Datamodel.OrderStatusUpdated.newBuilder().
+          setStatus(status.toString).
+          build
+      }
     }
     object OrderStatusUpdated extends DatamodelReader {
       def fromDatamodel = {
         case dm: Datamodel.OrderStatusUpdated =>
+          println("From DataModel OrderStatusUpdated")
           OrderStatusUpdated(SalesOrderStatus.withName(dm.getStatus()))
       }
     }
@@ -146,110 +153,6 @@ class SalesOrder(idInput: String) extends PersistentEntity[SalesOrderFO](idInput
     case cvo: Command.CreateValidatedOrder => true
     case _                                 => false
   }
-
-  //  override def customCreateHandling: StateFunction = {
-  //    case Event(req: CreateOrder, _) =>
-  //      lookup(InventoryClerk.Name) ! Identify(ResolutionIdent.Book)
-  //      lookup(CustomerRelationsManager.Name) ! Identify(ResolutionIdent.User)
-  //      lookup(CreditAssociate.Name) ! Identify(ResolutionIdent.Credit)
-  //      goto(ResolvingDependencies) using UnresolvedDependencies(Inputs(sender(), req))
-  //  }
-  //
-  //  when(ResolvingDependencies, ResolveTimeout)(transform {
-  //    case Event(ActorIdentity(identifier: ResolutionIdent.Value, actor @ Some(ref)),
-  //      data: UnresolvedDependencies) =>
-  //
-  //      log.info("Resolved dependency {}, {}", identifier, ref)
-  //      val newData = identifier match {
-  //        case ResolutionIdent.Book   => data.copy(invClerk = actor)
-  //        case ResolutionIdent.User   => data.copy(userAssociate = actor)
-  //        case ResolutionIdent.Credit => data.copy(creditAssociate = actor)
-  //      }
-  //      stay using newData
-  //  } using {
-  //    case FSM.State(state, UnresolvedDependencies(inputs, Some(userAssociate),
-  //      Some(invClerk), Some(creditAssociate)), _, _, _) =>
-  //
-  //      log.info("Resolved all dependencies, looking up entities")
-  //      userAssociate ! CustomerRelationsManager.FindUserById(inputs.request.userId)
-  //      val expectedBooks = inputs.request.lineItems.map(_.bookId).toSet
-  //      expectedBooks.foreach(id => invClerk ! InventoryClerk.FindBook(id))
-  //      goto(LookingUpEntities) using ResolvedDependencies(inputs, expectedBooks, None, Map.empty, invClerk, userAssociate, creditAssociate)
-  //  })
-  //
-  //  when(LookingUpEntities, 10 seconds)(transform {
-  //    case Event(FullResult(b: BookFO), data: ResolvedDependencies) =>
-  //      log.info("Looked up book: {}", b)
-  //
-  //      //Make sure inventory is available
-  //      val lineItemForBook = data.inputs.request.lineItems.find(_.bookId == b.id)
-  //      lineItemForBook match {
-  //        case None =>
-  //          log.error("Got back a book for which we don't have a line item")
-  //          data.originator ! unexpectedFail
-  //          stop
-  //
-  //        case Some(item) if item.quantity > b.inventoryAmount =>
-  //          log.error("Inventory not available for book with id {}", b.id)
-  //          data.originator ! Failure(FailureType.Validation, InventoryNotAvailError)
-  //          stop
-  //
-  //        case _ =>
-  //          stay using data.copy(books = data.books ++ Map(b.id -> b))
-  //      }
-  //
-  //    case Event(FullResult(u: UserFO), data: ResolvedDependencies) =>
-  //      log.info("Found user: {}", u)
-  //      stay using data.copy(user = Some(u))
-  //
-  //    case Event(EmptyResult, data: ResolvedDependencies) =>
-  //      val (etype, error) =
-  //        if (sender().path.name == InventoryClerk.Name) ("book", InvalidBookIdError)
-  //        else ("user", InvalidUserIdError)
-  //      log.info("Unexpected result type of EmptyResult received looking up a {} entity", etype)
-  //      data.originator ! Failure(FailureType.Validation, error)
-  //      stop
-  //
-  //  } using {
-  //    case FSM.State(state, ResolvedDependencies(inputs, expectedBooks, Some(u),
-  //      bookMap, userAssociate, invClerk, creditAssociate), _, _, _) if bookMap.keySet == expectedBooks =>
-  //
-  //      log.info("Successfully looked up all entities and inventory is available, charging credit card")
-  //      val lineItems = inputs.request.lineItems.
-  //        flatMap { item =>
-  //          bookMap.
-  //            get(item.bookId).
-  //            map(b => SalesOrderLineItemFO(0, 0, b.id, item.quantity, item.quantity * b.cost, newDate, newDate))
-  //        }
-  //
-  //      val total = lineItems.map(_.cost).sum
-  //      creditAssociate ! CreditAssociate.ChargeCreditCard(inputs.request.cardInfo, total)
-  //      goto(ChargingCard) using LookedUpData(inputs, u, lineItems, total)
-  //  })
-  //
-  //  when(ChargingCard, 10 seconds) {
-  //    case Event(FullResult(txn: CreditCardTransactionFO), data: LookedUpData) if txn.status == CreditTransactionStatus.Approved =>
-  //      val order = SalesOrderFO(0, data.user.id, txn.id, SalesOrderStatus.InProgress, data.total, data.items, newDate, newDate)
-  //      requestFoForSender(data.inputs.originator)
-  //      persist(order, repo.persistEntity(order), id => order.copy(id = id), true)
-  //
-  //    case Event(FullResult(txn: CreditCardTransactionFO), data: LookedUpData) =>
-  //      log.info("Credit was rejected for request: {}", data.inputs.request)
-  //      data.originator ! Failure(FailureType.Validation, CreditRejectedError)
-  //      stop
-  //  }
-  //
-  //  override def postCreate(fo: SalesOrderFO) {
-  //    val items = fo.lineItems.map(i => (i.bookId, i.quantity))
-  //    val event = InventoryClerk.OrderCreated(fo.id, items)
-  //    context.system.eventStream.publish(event)
-  //  }
-  //
-  //  def initializedHandling: StateFunction = {
-  //    case Event(UpdateOrderStatus(status), data: InitializedData[SalesOrderFO]) =>
-  //      log.info("Setting status on order {} to {}", data.fo.id, status)
-  //      persist(data.fo, repo.updateOrderStatus(data.fo.id, status), _ => data.fo.copy(status = status))
-  //  }
 
 }
 
