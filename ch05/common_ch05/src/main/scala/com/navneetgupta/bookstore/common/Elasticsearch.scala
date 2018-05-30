@@ -38,7 +38,7 @@ trait ElasticsearchSupport { me: BookstoreActor =>
   def indexRoot: String
   def entityType: String
   def baseUrl = s"${esSettings.rootUrl}/${indexRoot}/$entityType"
-
+  //(implicit ec: ExecutionContext)
   def callElasticsearch[RT: Manifest](req: Req)(implicit ec: ExecutionContext): Future[RT] = {
     Http.default(req.setContentType("application/json", Charset.defaultCharset()) OK as.String).map(resp => read[RT](resp))
   }

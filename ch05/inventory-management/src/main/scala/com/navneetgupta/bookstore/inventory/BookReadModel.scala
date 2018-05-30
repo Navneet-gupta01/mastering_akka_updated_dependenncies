@@ -38,21 +38,29 @@ class BookViewBuilder extends BookReadModel with ViewBuilder[BookViewBuilder.Boo
       InsertAction(book.id, bookRM)
 
     case TagAdded(tag) =>
+      log.info("Adding tag to a book entity into the elasticsearch index: {} for bookId {} ", tag, bookId)
       UpdateAction(bookId, "tags += tag", Map("tag" -> tag))
 
     case TagRemoved(tag) =>
+      log.info("Adding tag to a book entity into the elasticsearch index: {} for bookId {} ", tag, bookId)
       UpdateAction(bookId, "tags -= tag", Map("tag" -> tag))
 
     case InventoryAdded(amount) =>
+      log.info("InventoryAdded to a book entity into the elasticsearch index:for bookId {} with amount {} ", bookId, amount)
       UpdateAction(bookId, "inventoryAmount += amount", Map("amount" -> amount))
 
     case InventoryAllocated(orderId, bookId, amount) =>
+      log.info("InventoryAllocated to a book entity into the elasticsearch index: for bookId {}, orderId: {}, amount: {} ", bookId, orderId, amount)
       UpdateAction(bookId, "inventoryAmount -= amount", Map("amount" -> amount))
 
     case BookDeleted(bookId) =>
+      log.info("BookDeleted to a book entity into the elasticsearch index: bookId {} ", bookId)
       UpdateAction(bookId, "deleted = delBool", Map("delBool" -> true))
 
     case InventoryBackordered(orderId, bookId) =>
+      NoAction(bookId)
+    case evt =>
+      log.info("Found UnMAtching Event evt : {}", evt)
       NoAction(bookId)
   }
 }

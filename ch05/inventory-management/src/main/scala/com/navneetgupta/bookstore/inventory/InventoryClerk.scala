@@ -22,9 +22,9 @@ object InventoryClerk {
   //Lookup operations
   case class FindBook(id: String)
   //case class FindBooksForIds(ids: Seq[String])
-  case class FindBooksByTags(tags: Seq[String])
+  //case class FindBooksByTags(tags: Seq[String])
   case class FindBooksByTitle(title: String)
-  case class FindBooksByAuthor(author: String)
+  //case class FindBooksByAuthor(author: String)
 
   //Modify operations
   case class CreateBook(title: String, author: String, tags: List[String], cost: Double)

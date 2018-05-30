@@ -2,6 +2,7 @@ package com.navneetgupta.bookstore.inventory
 
 import com.navneetgupta.bookstore.common.Bootstrap
 import akka.actor.ActorSystem
+import io.netty.channel.ChannelHandler.Sharable
 
 class InventoryBoot extends Bootstrap {
   override def bootstrap(system: ActorSystem) = {

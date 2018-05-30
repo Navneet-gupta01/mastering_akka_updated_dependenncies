@@ -14,11 +14,13 @@ libraryDependencies ++= Seq(
         "ws.unfiltered" %% "unfiltered-netty-server" % "0.9.1",
         "ws.unfiltered" %% "unfiltered-json4s" % "0.9.1",
         "org.json4s" %% "json4s-ext" % "3.6.0-M3",
-        "com.typesafe.akka" %% "akka-persistence-cassandra" % "0.84" excludeAll(ExclusionRule("io.netty")),
+        "postgresql" % "postgresql" % "9.1-901-1.jdbc4",
+		"com.typesafe.akka" %% "akka-persistence-query" % "2.5.12",
+		"com.typesafe.akka" %% "akka-persistence" % "2.5.12",
+        "com.typesafe.akka" %% "akka-persistence-cassandra" % "0.84",
   		"com.typesafe.akka" %% "akka-persistence-cassandra-launcher" % "0.84" % Test,
-  		"org.dispatchhttp"        %% "dispatch-core"   % "0.14.0",
-        "com.google.protobuf" % "protobuf-java" % "3.5.1",
-		"com.typesafe.akka" %% "akka-persistence-query" % "2.5.12"
+        "net.databinder.dispatch" %% "dispatch-core" % "0.13.3",
+        "com.google.protobuf" % "protobuf-java" % "3.5.1"
 )
 
 dependencyOverrides ++= Seq(

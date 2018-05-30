@@ -15,6 +15,7 @@ class InventoryEndpoint(inventoryClerk: ActorRef, bookView: ActorRef)(implicit o
 
   import akka.pattern._
   import com.navneetgupta.bookstore.inventory.InventoryClerk._
+  import BookView._
 
   object TagParam extends Params.Extract("tag", { values =>
     val filtered = values.filter(_.nonEmpty)
@@ -24,10 +25,12 @@ class InventoryEndpoint(inventoryClerk: ActorRef, bookView: ActorRef)(implicit o
 
   override def intent = {
     case req @ GET(Path(Seg("api" :: "book" :: bookId :: Nil))) =>
+      println("inventoryClerk Actor is {} " + inventoryClerk.getClass.getName + "         " + inventoryClerk.path.name)
       val f = (inventoryClerk ? FindBook(bookId))
       respond(f, req)
     case req @ GET(Path(Seg("api" :: "book" :: Nil))) & Params(TagParam(tags)) =>
       println("Tags to search is " + tags)
+      println("bookView Actor is {} ", bookView.getClass.getName + "            " + bookView.path.name)
       val f = (bookView ? FindBooksByTags(tags))
       respond(f, req)
     case req @ GET(Path(Seg("api" :: "book" :: Nil))) & Params(AuthorParam(author)) =>
