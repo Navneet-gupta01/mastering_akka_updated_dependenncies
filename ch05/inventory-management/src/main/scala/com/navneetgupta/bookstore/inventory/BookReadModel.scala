@@ -39,23 +39,23 @@ class BookViewBuilder extends BookReadModel with ViewBuilder[BookViewBuilder.Boo
 
     case TagAdded(tag) =>
       log.info("Adding tag to a book entity into the elasticsearch index: {} for bookId {} ", tag, bookId)
-      UpdateAction(bookId, "tags += tag", Map("tag" -> tag))
+      UpdateAction(bookId, "tags.add(params.tag)", Map("tag" -> tag))
 
     case TagRemoved(tag) =>
-      log.info("Adding tag to a book entity into the elasticsearch index: {} for bookId {} ", tag, bookId)
-      UpdateAction(bookId, "tags -= tag", Map("tag" -> tag))
+      log.info("Removing tag from a book entity into the elasticsearch index: {} for bookId {} ", tag, bookId)
+      UpdateAction(bookId, "tags.remove(ctx._source.tags.indexOf(params.tag))", Map("tag" -> tag))
 
     case InventoryAdded(amount) =>
       log.info("InventoryAdded to a book entity into the elasticsearch index:for bookId {} with amount {} ", bookId, amount)
-      UpdateAction(bookId, "inventoryAmount += amount", Map("amount" -> amount))
+      UpdateAction(bookId, "inventoryAmount += params.amount", Map("amount" -> amount))
 
     case InventoryAllocated(orderId, bookId, amount) =>
       log.info("InventoryAllocated to a book entity into the elasticsearch index: for bookId {}, orderId: {}, amount: {} ", bookId, orderId, amount)
-      UpdateAction(bookId, "inventoryAmount -= amount", Map("amount" -> amount))
+      UpdateAction(bookId, "inventoryAmount -= params.amount", Map("amount" -> amount))
 
     case BookDeleted(bookId) =>
       log.info("BookDeleted to a book entity into the elasticsearch index: bookId {} ", bookId)
-      UpdateAction(bookId, "deleted = delBool", Map("delBool" -> true))
+      UpdateAction(bookId, "deleted = params.delBool", Map("delBool" -> true))
 
     case InventoryBackordered(orderId, bookId) =>
       NoAction(bookId)

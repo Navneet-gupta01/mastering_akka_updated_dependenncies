@@ -13,6 +13,7 @@ import akka.persistence.query.Sequence
 import com.navneetgupta.bookstore.inventory.Book.Event.InventoryAllocated
 import com.navneetgupta.bookstore.inventory.Book.Event.InventoryBackordered
 import akka.persistence.query.EventEnvelope
+import akka.persistence.query.TimeBasedUUID
 
 object SalesAssociate {
   val Name = "sales-associate"
@@ -39,14 +40,14 @@ class SalesAssociate extends Aggregate[SalesOrderFO, SalesOrder] {
   val journal = PersistenceQuery(context.system).
     readJournalFor[CassandraReadJournal](CassandraReadJournal.Identifier)
   projection.fetchLatestOffset.foreach { offset =>
-    offset match {
+    offset.getOrElse(NoOffset) match {
       case NoOffset =>
-        log.info("Order status projection using an offset of: {}", new java.util.Date(0L))
-      case Sequence(x) => log.info("Order status projection using an offset of: {}", new java.util.Date(x))
+        log.info("Order status projection using an offset of NoOffset: {}", new java.util.Date(0L))
+      case TimeBasedUUID(x) => log.info("Order status projection using an offset of TimeBasedUUID with uuid: {}", x)
     }
 
     journal.
-      eventsByTag("book", offset).
+      eventsByTag("book", offset.getOrElse(NoOffset)).
       runForeach(e => self ! e)
   }
 
@@ -71,7 +72,10 @@ class SalesAssociate extends Aggregate[SalesOrderFO, SalesOrder] {
 
         case other =>
       }
-      projection.storeLatestOffset(offset)
+      offset match {
+        case TimeBasedUUID(x) =>
+          projection.storeLatestOffset(x)
+      }
   }
 
   def entityProps(id: String) = SalesOrder.props(id)

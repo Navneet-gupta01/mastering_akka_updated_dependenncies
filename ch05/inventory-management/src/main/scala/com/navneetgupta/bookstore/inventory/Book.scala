@@ -99,8 +99,8 @@ object Book {
     object TagRemoved extends DatamodelReader {
       def fromDatamodel = {
         case ta: Datamodel.TagRemoved =>
-          println("Form DataModel TagRemoved")
-          TagAdded(ta.getTag())
+          println("From DataModel TagRemoved")
+          TagRemoved(ta.getTag())
       }
     }
     case class InventoryAdded(amount: Int) extends BookEvent {

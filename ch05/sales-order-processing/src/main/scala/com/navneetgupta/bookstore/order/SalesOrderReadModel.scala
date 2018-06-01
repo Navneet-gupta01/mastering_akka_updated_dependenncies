@@ -19,6 +19,7 @@ import com.navneetgupta.bookstore.order.SalesOrderViewBuilder.SalesOrderRM
 import com.navneetgupta.bookstore.common.ElasticsearchSupport
 import com.navneetgupta.bookstore.common.ElasticsearchApi
 import com.navneetgupta.bookstore.common.BookstoreActor
+import akka.persistence.query.TimeBasedUUID
 
 object SalesOrderViewBuilder {
   val Name = "order-view-builder"
@@ -51,7 +52,7 @@ class SalesOrderViewBuilder extends SalesOrderReadModel with ViewBuilder[SalesOr
         offset, Map.empty, order.lineItems.size))
       DeferredCreate
     case LineItemStatusUpdated(bookId, itemNumber, status) =>
-      UpdateAction(id, s"lineItems['${itemNumber}'].status = newStatus", Map("newStatus" -> status.toString()))
+      UpdateAction(id, s"lineItems['${itemNumber}'].status = params.newStatus", Map("newStatus" -> status.toString()))
   }
 
   def loadingData(order: SalesOrderFO, offset: Offset, books: Map[String, BookFO], needed: Int): Receive = {
@@ -77,7 +78,11 @@ class SalesOrderViewBuilder extends SalesOrderReadModel with ViewBuilder[SalesOr
 
         import context.dispatcher
         updateIndex(order.id, salesOrderRm, None)(context.dispatcher).andThen {
-          case tr => resumableProjection.storeLatestOffset(offset)
+          case tr =>
+            offset match {
+              case TimeBasedUUID(x) =>
+                resumableProjection.storeLatestOffset(x)
+            }
         }
       } else {
         context.become(loadingData(order, offset, newBooks, newNeeded))

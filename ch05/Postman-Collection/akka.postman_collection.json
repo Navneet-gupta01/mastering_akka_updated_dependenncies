@@ -17,7 +17,7 @@
 				],
 				"body": {},
 				"url": {
-					"raw": "http://localhost:8080/api/user/a0ca9fef-39f0-4e73-8899-0196cfbeaa8a",
+					"raw": "http://localhost:8080/api/user/31e46a20-eb7c-4f36-b99f-831a942160e2",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -26,7 +26,7 @@
 					"path": [
 						"api",
 						"user",
-						"a0ca9fef-39f0-4e73-8899-0196cfbeaa8a"
+						"31e46a20-eb7c-4f36-b99f-831a942160e2"
 					]
 				}
 			},
@@ -44,7 +44,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"title\" : \"Mastering Akka2\",\n\t\"author\": \"Navneet Gupta\",\n\t\"cost\" : 93.24,\n\t\"tags\": [\"Packet2\",\"Mastering-Akka2\"]\n}"
+					"raw": "{\n\t\"title\" : \"Grt Lets Check It Out\",\n\t\"author\": \"Navneet Gupta\",\n\t\"cost\" : 93.24,\n\t\"tags\": [\"Pocket\",\"Checkout\"]\n}"
 				},
 				"url": {
 					"raw": "http://localhost:8080/api/book",
@@ -73,7 +73,7 @@
 				],
 				"body": {},
 				"url": {
-					"raw": "http://localhost:8080/api/user?email=navneetgupta@gmail.com",
+					"raw": "http://localhost:8080/api/user?email=qwertyuiop@gmail.com",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -86,7 +86,7 @@
 					"query": [
 						{
 							"key": "email",
-							"value": "navneetgupta@gmail.com"
+							"value": "qwertyuiop@gmail.com"
 						}
 					]
 				}
@@ -105,10 +105,10 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"firstName\" : \"Mr. Navneet\",\n\t\"lastName\": \"Kumar Gupta\"\n}"
+					"raw": "{\n\t\"firstName\" : \"Mr.\",\n\t\"lastName\": \"Gupta\"\n}"
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/user/navneetgupta@gmail.com",
+					"raw": "http://localhost:8080/api/user/qwertyuiop@gmail.com",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -117,7 +117,7 @@
 					"path": [
 						"api",
 						"user",
-						"navneetgupta@gmail.com"
+						"qwertyuiop@gmail.com"
 					]
 				}
 			},
@@ -138,7 +138,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/user/navneetgupta@gmail.com",
+					"raw": "http://localhost:8080/api/user/qwertyuiop@gmail.com",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -147,7 +147,7 @@
 					"path": [
 						"api",
 						"user",
-						"navneetgupta@gmail.com"
+						"qwertyuiop@gmail.com"
 					]
 				}
 			},
@@ -165,7 +165,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"title\" : \"Mastering Akka 4\",\n\t\"author\": \"Navneet Gupta\",\n\t\"cost\" : 93.24,\n\t\"tags\": [\"Packet\",\"Mastering-Akka\"]\n}"
+					"raw": "{\n\t\"title\" : \"Akka 4\",\n\t\"author\": \"Gupta Ji\",\n\t\"cost\" : 93.24,\n\t\"tags\": [\"Pocket\",\"Akka\"]\n}"
 				},
 				"url": {
 					"raw": "http://localhost:8080/api/book",
@@ -197,7 +197,7 @@
 					"raw": "{\n\t\"title\" : \"Mastering Akka\",\n\t\"author\": \"Navneet Gupta\",\n\t\"cost\" : 93.24\n\t\"tags\": [\"Packet\",\"Mastering-Akka\"]\n}"
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/book/0f7e4d58-cd1c-4ddc-981d-5323b33ba13a",
+					"raw": "http://localhost:8080/api/book/2b10bc85-efaa-495d-8052-7593c2f6f40e",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -206,7 +206,7 @@
 					"path": [
 						"api",
 						"book",
-						"0f7e4d58-cd1c-4ddc-981d-5323b33ba13a"
+						"2b10bc85-efaa-495d-8052-7593c2f6f40e"
 					]
 				}
 			},
@@ -224,10 +224,10 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"title\" : \"Mastering Akka\",\n\t\"author\": \"Navneet Gupta\",\n\t\"cost\" : 93.24\n\t\"tags\": [\"Packet\",\"Mastering-Akka\"]\n}"
+					"raw": "{\n  \"title\" : \"Mastering Akka\",\n  \"author\": \"Navneet Gupta\",\n  \"cost\" : 93.24\n  \"tags\": [\"Packet\",\"Mastering-Akka\"]\n}"
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/book?tag=Packet",
+					"raw": "http://localhost:8080/api/book?tag=Pocket",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -240,7 +240,7 @@
 					"query": [
 						{
 							"key": "tag",
-							"value": "Packet"
+							"value": "Pocket"
 						}
 					]
 				}
@@ -262,7 +262,7 @@
 					"raw": "{\n\t\"title\" : \"Mastering Akka\",\n\t\"author\": \"Navneet Gupta\",\n\t\"cost\" : 93.24\n\t\"tags\": [\"Packet\",\"Mastering-Akka\"]\n}"
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/book?author=gupta",
+					"raw": "http://localhost:8080/api/book?author=Gupta",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -275,7 +275,7 @@
 					"query": [
 						{
 							"key": "author",
-							"value": "gupta"
+							"value": "Gupta"
 						}
 					]
 				}
@@ -294,10 +294,10 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"title\" : \"Mastering Akka\",\n\t\"author\": \"Navneet Gupta\",\n\t\"cost\" : 93.24\n\t\"tags\": [\"Packet\",\"Mastering-Akka\"]\n}"
+					"raw": ""
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/book/d2e82a30-3677-48da-ab54-21b22c2465d8/tag/Excellent_akka",
+					"raw": "http://localhost:8080/api/book/2b10bc85-efaa-495d-8052-7593c2f6f40e/tag/Jacket",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -306,9 +306,9 @@
 					"path": [
 						"api",
 						"book",
-						"d2e82a30-3677-48da-ab54-21b22c2465d8",
+						"2b10bc85-efaa-495d-8052-7593c2f6f40e",
 						"tag",
-						"Excellent_akka"
+						"Jacket"
 					]
 				}
 			},
@@ -329,7 +329,7 @@
 					"raw": "{\n\t\"title\" : \"Mastering Akka\",\n\t\"author\": \"Navneet Gupta\",\n\t\"cost\" : 93.24\n\t\"tags\": [\"Packet\",\"Mastering-Akka\"]\n}"
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/book/d2e82a30-3677-48da-ab54-21b22c2465d8/tag/packet",
+					"raw": "http://localhost:8080/api/book/2b10bc85-efaa-495d-8052-7593c2f6f40e/tag/Pocket",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -338,9 +338,9 @@
 					"path": [
 						"api",
 						"book",
-						"d2e82a30-3677-48da-ab54-21b22c2465d8",
+						"2b10bc85-efaa-495d-8052-7593c2f6f40e",
 						"tag",
-						"packet"
+						"Pocket"
 					]
 				}
 			},
@@ -358,10 +358,10 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"title\" : \"Mastering Akka\",\n\t\"author\": \"Navneet Gupta\",\n\t\"cost\" : 93.24\n\t\"tags\": [\"Packet\",\"Mastering-Akka\"]\n}"
+					"raw": ""
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/book/d2e82a30-3677-48da-ab54-21b22c2465d8/inventory/10",
+					"raw": "http://localhost:8080/api/book/2c0e6df2-ec9b-497b-9e7a-6f9279679c36/inventory/10",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -370,7 +370,7 @@
 					"path": [
 						"api",
 						"book",
-						"d2e82a30-3677-48da-ab54-21b22c2465d8",
+						"2c0e6df2-ec9b-497b-9e7a-6f9279679c36",
 						"inventory",
 						"10"
 					]
@@ -390,10 +390,10 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"title\" : \"Mastering Akka\",\n\t\"author\": \"Navneet Gupta\",\n\t\"cost\" : 93.24\n\t\"tags\": [\"Packet\",\"Mastering-Akka\"]\n}"
+					"raw": ""
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/book/0f7e4d58-cd1c-4ddc-981d-5323b33ba13a",
+					"raw": "http://localhost:8080/api/book/2b10bc85-efaa-495d-8052-7593c2f6f40e",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -402,7 +402,7 @@
 					"path": [
 						"api",
 						"book",
-						"0f7e4d58-cd1c-4ddc-981d-5323b33ba13a"
+						"2b10bc85-efaa-495d-8052-7593c2f6f40e"
 					]
 				}
 			},
@@ -420,7 +420,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"userEmail\" : \"navneetgupta1@gmail.com\",\n\t\"cardInfo\": {\n\t\t\"cardHolder\" : \"Navneet Gupta\",\n\t\t\"cardType\" : \"VISA\",\n\t\t\"cardNumber\" : \"4321234512342345\",\n\t\t\"expiration\": \"2004-09-04T17:05:22.000Z\"\n\t},\n\t\"lineItems\": [\n\t\t{\n\t\t\t\"bookId\": \"d2e82a30-3677-48da-ab54-21b22c2465d8\",\n\t\t\t\"quantity\": 4\n\t\t}\n\t]\n}"
+					"raw": "{\n\t\"userEmail\" : \"vbmbmmbb@gmail.com\",\n\t\"cardInfo\": {\n\t\t\"cardHolder\" : \"Navneet Gupta\",\n\t\t\"cardType\" : \"VISA\",\n\t\t\"cardNumber\" : \"4321234512342345\",\n\t\t\"expiration\": \"2004-09-04T17:05:22.000Z\"\n\t},\n\t\"lineItems\": [\n\t\t{\n\t\t\t\"bookId\": \"2c0e6df2-ec9b-497b-9e7a-6f9279679c36\",\n\t\t\t\"quantity\": 10\n\t\t}\n\t]\n}"
 				},
 				"url": {
 					"raw": "http://localhost:8080/api/order/",
@@ -450,7 +450,7 @@
 				],
 				"body": {},
 				"url": {
-					"raw": "http://localhost:8080/api/order/bc0a3660-506b-4750-8f26-42e2e2446437",
+					"raw": "http://localhost:8080/api/order/bd38b62b-6a58-44e0-ba26-b16e56cd6549",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -459,7 +459,7 @@
 					"path": [
 						"api",
 						"order",
-						"bc0a3660-506b-4750-8f26-42e2e2446437"
+						"bd38b62b-6a58-44e0-ba26-b16e56cd6549"
 					]
 				}
 			},
@@ -477,7 +477,7 @@
 				],
 				"body": {},
 				"url": {
-					"raw": "http://localhost:8080/api/order?userEmail",
+					"raw": "http://localhost:8080/api/order?userId=qwertyuiop@gmail.com",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -489,8 +489,8 @@
 					],
 					"query": [
 						{
-							"key": "userEmail",
-							"value": null
+							"key": "userId",
+							"value": "qwertyuiop@gmail.com"
 						}
 					]
 				}
@@ -509,7 +509,7 @@
 				],
 				"body": {},
 				"url": {
-					"raw": "http://localhost:8080/api/order?bookId=1",
+					"raw": "http://localhost:8080/api/order?bookId=2c0e6df2-ec9b-497b-9e7a-6f9279679c36",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -522,7 +522,7 @@
 					"query": [
 						{
 							"key": "bookId",
-							"value": "1"
+							"value": "2c0e6df2-ec9b-497b-9e7a-6f9279679c36"
 						}
 					]
 				}
@@ -541,7 +541,7 @@
 				],
 				"body": {},
 				"url": {
-					"raw": "http://localhost:8080/api/order?bookTag=Packet",
+					"raw": "http://localhost:8080/api/order?bookTag=Pocket",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -554,7 +554,7 @@
 					"query": [
 						{
 							"key": "bookTag",
-							"value": "Packet"
+							"value": "Pocket"
 						}
 					]
 				}
@@ -573,7 +573,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"firstName\" : \"Navneet\",\n\t\"lastName\": \"Gupta\",\n\t\"email\" : \"navneetgupta1@gmail.com\"\n}"
+					"raw": "{\n\t\"firstName\" : \"Navneet\",\n\t\"lastName\": \"Gupta\",\n\t\"email\" : \"qwertyuiop@gmail.com\"\n}"
 				},
 				"url": {
 					"raw": "http://localhost:8080/api/user",

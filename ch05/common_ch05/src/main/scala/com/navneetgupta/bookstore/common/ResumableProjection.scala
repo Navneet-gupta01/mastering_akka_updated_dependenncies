@@ -14,10 +14,11 @@ import akka.persistence.query.Sequence
 import akka.persistence.query.NoOffset
 import akka.persistence.query.TimeBasedUUID
 import java.util.Date
+import java.util.UUID
 
 abstract class ResumableProjection(identifier: String) {
-  def storeLatestOffset(offset: Offset): Future[Boolean]
-  def fetchLatestOffset: Future[Offset]
+  def storeLatestOffset(uuid: UUID): Future[Boolean]
+  def fetchLatestOffset: Future[Option[Offset]]
 }
 
 object ResumableProjection {
@@ -29,16 +30,17 @@ class CassandraResumableProjection(identifier: String, system: ActorSystem)
     extends ResumableProjection(identifier) {
   val projectionStorage = CassandraProjectionStorage(system) //TODO
 
-  override def storeLatestOffset(offset: Offset): Future[Boolean] = {
-    offset match {
-      case NoOffset =>
-        projectionStorage.updateOffset(identifier, new Date(0L).getTime)
-      case TimeBasedUUID(x) =>
-        projectionStorage.updateOffset(identifier, new Date().getTime)
-    }
+  override def storeLatestOffset(uuid: UUID): Future[Boolean] = {
+    projectionStorage.updateOffset(identifier, uuid)
+    //    offset match {
+    //      case NoOffset =>
+    //        projectionStorage.updateOffset(identifier, )
+    //      case TimeBasedUUID(x) =>
+    //
+    //    }
 
   }
-  override def fetchLatestOffset: Future[Offset] = {
+  override def fetchLatestOffset: Future[Option[Offset]] = {
     projectionStorage.fetchLatestOffset(identifier)
   }
 }
@@ -58,7 +60,7 @@ class CassandraProjectionStorageExt(system: ActorSystem) extends Extension {
 
   val createTableStmt = """
       CREATE TABLE IF NOT EXISTS bookstore.projectionoffsets (
-        identifier varchar primary key, offset bigint)
+        identifier varchar primary key, offset uuid)
   """
 
   val init: Session => Future[Unit] = (session: Session) => for {
@@ -68,20 +70,17 @@ class CassandraProjectionStorageExt(system: ActorSystem) extends Extension {
 
   val session = new CassandraSession(system, cassandraConfig, init)
 
-  def updateOffset(identifier: String, offset: Long): Future[Boolean] = (for {
+  def updateOffset(identifier: String, offset: UUID): Future[Boolean] = (for {
     session <- session.underlying()
     _ <- session.executeAsync(s"update bookstore.projectionoffsets set offset = $offset where identifier = '$identifier'")
   } yield true) recover { case t => false }
 
-  def fetchLatestOffset(identifier: String): Future[Offset] = for {
+  def fetchLatestOffset(identifier: String): Future[Option[Offset]] = for {
     session <- session.underlying()
     rs <- session.executeAsync(s"select offset from bookstore.projectionoffsets where identifier = '$identifier'")
   } yield {
     import collection.JavaConversions._
-    rs.all().headOption.map(_.getLong(0)) match {
-      case None    => NoOffset
-      case Some(x) => Sequence(x)
-    }
+    rs.all().headOption.map(x => TimeBasedUUID(x.getUUID(0)))
   }
 }
 

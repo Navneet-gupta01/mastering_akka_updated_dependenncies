@@ -14,6 +14,8 @@ import com.navneetgupta.bookstore.common.ResumableProjection
 import akka.stream.ActorMaterializer
 import akka.persistence.query.PersistenceQuery
 import akka.persistence.cassandra.query.scaladsl.CassandraReadJournal
+import akka.persistence.query.NoOffset
+import akka.persistence.query.TimeBasedUUID
 
 object InventoryClerk {
   def props = Props[InventoryClerk]
@@ -58,7 +60,7 @@ class InventoryClerk extends Aggregate[BookFO, Book] {
     readJournalFor[CassandraReadJournal](CassandraReadJournal.Identifier)
   projection.fetchLatestOffset.foreach { o =>
     journal.
-      eventsByTag("ordercreated", o).
+      eventsByTag("ordercreated", o.getOrElse(NoOffset)).
       runForeach(e => self ! e)
   }
 
@@ -92,7 +94,10 @@ class InventoryClerk extends Aggregate[BookFO, Book] {
           case (bookId, quant) =>
             forwardCommand(bookId, Book.Command.AllocateInventory(order.id, quant))
         }
-      projection.storeLatestOffset(offset)
+      offset match {
+        case TimeBasedUUID(x) =>
+          projection.storeLatestOffset(x)
+      }
   }
 
   def entityProps(id: String) = Book.props(id)

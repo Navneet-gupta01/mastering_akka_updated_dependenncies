@@ -35,7 +35,7 @@ class UserViewBuilder extends ViewBuilder[UserViewBuilder.UserRM] with UserReadM
       InsertAction(id, rm)
 
     case PersonalInfoUpdated(first, last) =>
-      UpdateAction(id, List("firstName = fn", "lastName = ln"), Map("fn" -> first, "ln" -> last))
+      UpdateAction(id, List("firstName = params.fn", "lastName = params.ln"), Map("fn" -> first, "ln" -> last))
 
     case UserDeleted(email) =>
       UpdateAction(id, "deleted = true", Map.empty[String, Any])

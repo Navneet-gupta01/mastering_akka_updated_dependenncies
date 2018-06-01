@@ -29,7 +29,7 @@ object ViewBuilder {
                           rm: ReadModelObject) extends IndexAction
   case class NoAction(id: String) extends IndexAction
   case object DeferredCreate extends IndexAction
-  case class LatestOffsetResult(offset: Offset)
+  case class LatestOffsetResult(offset: Option[Offset])
 }
 
 trait ViewBuilder[RM <: ReadModelObject] extends BookstoreActor with Stash with ElasticsearchUpdateSupport {
@@ -58,7 +58,7 @@ trait ViewBuilder[RM <: ReadModelObject] extends BookstoreActor with Stash with 
 
   def handlingEvents: Receive = {
     case LatestOffsetResult(offset) =>
-      val offsetDate = offset match {
+      val offsetDate = offset.getOrElse(NoOffset) match {
         case NoOffset =>
           clearIndex
           new Date(0L)
@@ -66,15 +66,21 @@ trait ViewBuilder[RM <: ReadModelObject] extends BookstoreActor with Stash with 
           new Date()
       }
 
-      val eventsSource = journal.eventsByTag(entityType, offset)
+      val eventsSource = journal.eventsByTag(entityType, offset.getOrElse(NoOffset))
       eventsSource.runForeach(self ! _)
 
       log.info("Starting up view builder for entity {} with offset time of {}", entityType, offsetDate)
     case env: EventEnvelope =>
       val updateProjection: PartialFunction[util.Try[IndexingResult], Unit] = {
         case tr =>
-          resumableProjection.storeLatestOffset(env.offset)
+          env.offset match {
+            case TimeBasedUUID(x) =>
+              resumableProjection.storeLatestOffset(x)
+          }
       }
+
+      log.info("sequence number is: {} ", env.sequenceNr);
+
       val id = env.persistenceId.toLowerCase().drop(
         entityType.length() + 1)
       actionFor(id, env.offset, env.event) match {

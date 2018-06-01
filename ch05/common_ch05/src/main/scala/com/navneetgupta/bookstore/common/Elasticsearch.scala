@@ -21,7 +21,7 @@ object ElasticsearchApi {
   case class IndexingResult(_shards: ShardData, _index: String,
                             _type: String, _id: String, _version: Int,
                             created: Option[Boolean]) extends EsResponse
-  case class UpdateScript(inline: String, params: Map[String, Any])
+  case class UpdateScript(source: String, params: Map[String, Any])
   case class UpdateRequest(script: UpdateScript)
   case class SearchHit(_source: JObject)
   case class QueryHits(hits: List[SearchHit])
@@ -62,8 +62,10 @@ trait ElasticsearchUpdateSupport extends ElasticsearchSupport { me: ViewBuilder[
     val urlBase = s"$baseUrl/$id"
     val requestUrl = version match {
       case None    => urlBase
-      case Some(v) => s"$urlBase/_update?version=$v"
+      case Some(v) => s"$urlBase/_update?version=$v" //s"$urlBase/_update?version=$v"
     }
+    log.info("=======================================================================================================================================================")
+    log.info("requesturl is {}", requestUrl)
     log.info("=======================================================================================================================================================")
     log.info("Serialized Request Body is {}", write(request))
     log.info("=======================================================================================================================================================")
