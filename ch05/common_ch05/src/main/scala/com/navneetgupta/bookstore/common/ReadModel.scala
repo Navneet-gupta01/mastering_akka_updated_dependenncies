@@ -10,6 +10,7 @@ import akka.persistence.query.Offset
 import java.util.Date
 import akka.persistence.query.Sequence
 import akka.persistence.query.NoOffset
+import akka.persistence.query.TimeBasedUUID
 
 trait ReadModelObject extends AnyRef {
   def id: String
@@ -61,8 +62,8 @@ trait ViewBuilder[RM <: ReadModelObject] extends BookstoreActor with Stash with 
         case NoOffset =>
           clearIndex
           new Date(0L)
-        case Sequence(x) =>
-          new Date(x)
+        case TimeBasedUUID(x) =>
+          new Date()
       }
 
       val eventsSource = journal.eventsByTag(entityType, offset)

@@ -18,7 +18,7 @@ object SalesAssociate {
   val Name = "sales-associate"
   def props = Props[SalesAssociate]
 
-  case class CreateNewOrder(userEmail: String, lineItems: List[SalesOrder.LineItemRequest], cardInfo: CreditCardInfo)
+  case class CreateNewOrder(userEmail: String, lineItems: List[SalesOrder.LineItemRequest], cardInfo: CreditCardInfo, id: Option[String])
   case class FindOrderById(id: String)
   //  case class FindOrdersForBook(bookId: String)
   //  case class FindOrdersForUser(userId: String)

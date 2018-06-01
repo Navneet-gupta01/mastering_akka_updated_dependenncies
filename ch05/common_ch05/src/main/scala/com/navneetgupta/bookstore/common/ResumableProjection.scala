@@ -32,7 +32,7 @@ class CassandraResumableProjection(identifier: String, system: ActorSystem)
   override def storeLatestOffset(offset: Offset): Future[Boolean] = {
     offset match {
       case NoOffset =>
-        projectionStorage.updateOffset(identifier, 1)
+        projectionStorage.updateOffset(identifier, new Date(0L).getTime)
       case TimeBasedUUID(x) =>
         projectionStorage.updateOffset(identifier, new Date().getTime)
     }

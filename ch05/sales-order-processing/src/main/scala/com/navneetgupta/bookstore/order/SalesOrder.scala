@@ -135,15 +135,6 @@ class SalesOrder(idInput: String) extends PersistentEntity[SalesOrderFO](idInput
     case Command.CreateValidatedOrder(order) =>
       //Now we can persist the complete order
       persist(Event.OrderCreated(order))(handleEventAndRespond())
-    //      persist(Event.OrderCreated(order)) { event =>
-    //        handleEventAndRespond()(event)
-    //
-    //        //For now, still using akka event bus.  Will fix this in chapter 5
-    //        val items = state.lineItems.map(i => (i.bookId, i.quantity))
-    //        val invevent = InventoryClerk.OrderCreated(state.id, items)
-    //        context.system.eventStream.publish(invevent)
-    //      }
-
     case Command.UpdateLineItemStatus(bookId, status) =>
       val itemNumber = state.lineItems.
         find(_.bookId == bookId).
