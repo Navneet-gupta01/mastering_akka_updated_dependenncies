@@ -1,0 +1,192 @@
+{
+	"info": {
+		"_postman_id": "5fbd76bb-f3bd-493a-a602-109cf4f7c0a6",
+		"name": "elsticsearch",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:9200/inventory/",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:9200/inventory/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"inventory",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:9200/users/",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:9200/users/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"users",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:9200/order/",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:9200/order/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9200",
+					"path": [
+						"order",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update ",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"script\": {\n    \"inline\": \"ctx._source.tags.add(params.tag)\",\n    \"params\": {\n      \"tag\": \"Pretty Girl\"\n    }\n  }\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:9200/inventory/book/78cf8755-d9f1-4d49-840f-8a5188563865/_update?version=1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "9200",
+					"path": [
+						"inventory",
+						"book",
+						"78cf8755-d9f1-4d49-840f-8a5188563865",
+						"_update"
+					],
+					"query": [
+						{
+							"key": "version",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update2",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"script\": {\n    \"inline\": \"ctx._source.tags.add(params.tag)\",\n    \"params\": {\n      \"tag\": \"Cool Boy\"\n    }\n  }\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:9200/inventory/book/5cff4672-0845-4062-bb8b-842d4febb87c/_update?version=1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "9200",
+					"path": [
+						"inventory",
+						"book",
+						"5cff4672-0845-4062-bb8b-842d4febb87c",
+						"_update"
+					],
+					"query": [
+						{
+							"key": "version",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://127.0.0.1:9200/inventory/book/4876a00b-03e8-45d0-9c1b-617680983924/_update?version=2",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"script\":{\"inline\":\"ctx._source.tags.remove(params.tag)\",\"params\":{\"tag\":\"Pretty\"}}}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:9200/inventory/book/2a158586-da48-48f0-a871-b6d45e3f2699/_update?version=3",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "9200",
+					"path": [
+						"inventory",
+						"book",
+						"2a158586-da48-48f0-a871-b6d45e3f2699",
+						"_update"
+					],
+					"query": [
+						{
+							"key": "version",
+							"value": "3"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

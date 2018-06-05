@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+option java_package = "com.navneetgupta.bookstore.credit";
+option java_outer_classname = "Datamodel";
+option optimize_for = SPEED;
+
+message CreditCardInfo{
+  string cardHolder = 1;
+  string cardType = 2;
+  string cardNumber = 3;
+  int64 expiration = 4;
+}
+ 
+message CreditCardTransaction {
+  string id = 1;
+  CreditCardInfo cardInfo = 2;
+  double amount = 3;
+  string status = 4;
+  string confirmationCode = 5;
+  int64 createTs = 6;
+}
+
+message CreditTransactionCreated{
+  CreditCardTransaction txn = 1;
+}
