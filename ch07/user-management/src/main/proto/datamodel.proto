@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+option java_package = "com.navneetgupta.bookstore.user";
+option java_outer_classname = "Datamodel";
+option optimize_for = SPEED;
+
+
+message BookstoreUser{
+  string email = 1;
+  string firstName = 2;
+  string lastName = 3;
+  int64 createTs = 4;
+  int64 modifyTs = 5;
+  bool deleted = 6;
+} 
+ 
+message UserCreated{
+  BookstoreUser user = 1;
+}
+
+message PersonalInfoUpdated{
+  string firstName = 1;
+  string lastName = 2;
+  int64 modifyTs = 3;
+}
+
+message UserDeleted{
+  string email = 1;
+  int64 modifyTs = 2;
+}
