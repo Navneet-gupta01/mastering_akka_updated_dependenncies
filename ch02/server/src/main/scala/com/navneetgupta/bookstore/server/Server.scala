@@ -1,7 +1,7 @@
 package com.navneetgupta.bookstore.server
 
 import com.typesafe.config.ConfigFactory
-import com.navneetgupta.bookstore.common.PostgresDb
+//import com.navneetgupta.bookstore.common.PostgresDb
 import akka.actor.ActorSystem
 import akka.event.Logging
 import collection.JavaConversions._
@@ -9,7 +9,7 @@ import com.navneetgupta.bookstore.common.Bootstrap
 
 object Server extends App {
   val conf = ConfigFactory.load.getConfig("bookstore")
-  PostgresDb.init(conf)
+  //PostgresDb.init(conf)
 
   implicit val system = ActorSystem("Bookstore", conf)
   val log = Logging(system.eventStream, "Server")

@@ -14,7 +14,7 @@ import com.navneetgupta.bookstore.common.EntityEvent
 import com.navneetgupta.bookstore.common.DatamodelReader
 
 object BookFO {
-  def empty = new BookFO("", "", "", Nil, 0.0, 0, new Date(0), new Date(0))
+  def empty = new BookFO("", "", "", Nil, 0.0, 0, null, null)
 }
 case class BookFO(id: String, title: String, author: String, tags: List[String], cost: Double,
                   inventoryAmount: Int, createTs: Date, modifyTs: Date = new Date(), deleted: Boolean = false) extends EntityFieldsObject[String, BookFO] {

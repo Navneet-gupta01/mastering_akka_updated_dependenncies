@@ -17,7 +17,7 @@ import com.navneetgupta.bookstore.common.PersistentEntity
 import com.navneetgupta.bookstore.user.Datamodel.UserCreated
 
 object UserFO {
-  def empty = new UserFO("", "", "", new Date(0), new Date(0))
+  def empty = new UserFO("", "", "", null, null)
 }
 
 case class UserFO(email: String, firstName: String, lastName: String,

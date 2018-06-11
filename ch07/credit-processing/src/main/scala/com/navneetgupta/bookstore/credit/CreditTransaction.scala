@@ -4,12 +4,7 @@ import java.util.Date
 import com.navneetgupta.bookstore.common.EntityFieldsObject
 import akka.actor.Props
 import com.navneetgupta.bookstore.common.EntityActor
-import org.json4s.NoTypeHints
-import org.json4s.native.Serialization
-import org.json4s.native.Serialization.{ read, write }
 import com.navneetgupta.bookstore.common.EntityActor.FinishCreate
-import dispatch.Http
-import dispatch._
 import com.navneetgupta.bookstore.common.EntityEvent
 import com.navneetgupta.bookstore.common.DatamodelReader
 import com.navneetgupta.bookstore.common.PersistentEntity
@@ -20,7 +15,7 @@ object CreditTransactionStatus extends Enumeration {
 case class CreditCardInfo(cardHolder: String, cardType: String, cardNumber: String, expiration: Date)
 
 object CreditCardTransactionFO {
-  def empty = new CreditCardTransactionFO("", CreditCardInfo("", "", "", new Date(0)), 0.0, CreditTransactionStatus.Rejected, None, new Date(0))
+  def empty = new CreditCardTransactionFO("", CreditCardInfo("", "", "", null), 0.0, CreditTransactionStatus.Rejected, None, null)
 }
 case class CreditCardTransactionFO(override val id: String, cardInfo: CreditCardInfo, amount: Double, status: CreditTransactionStatus.Value,
                                    confirmationCode: Option[String], createTs: Date, override val deleted: Boolean = false) extends EntityFieldsObject[String, CreditCardTransactionFO] {

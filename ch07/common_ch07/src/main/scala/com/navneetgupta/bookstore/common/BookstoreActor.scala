@@ -13,7 +13,10 @@ trait BookstoreActor extends Actor with ActorLogging {
   //PF to be used with the .recover combinator to convert an exception on a failed Future into a
   //Failure ServiceResult
   private val toFailure: PartialFunction[Throwable, ServiceResult[Nothing]] = {
-    case ex => Failure(FailureType.Service, ServiceResult.UnexpectedFailure, Some(ex))
+    case ex =>
+      log.info("Got Failure Exceptions is {}", ex.getMessage)
+      ex.printStackTrace()
+      Failure(FailureType.Service, ServiceResult.UnexpectedFailure, Some(ex))
   }
 
   /**
@@ -24,9 +27,15 @@ trait BookstoreActor extends Actor with ActorLogging {
   def pipeResponse[T](f: Future[T]): Unit =
     f.
       map {
-        case o: Option[_] => ServiceResult.fromOption(o)
-        case f: Failure   => f
-        case other        => FullResult(other)
+        case o: Option[_] =>
+          log.info("Got Optional Response")
+          ServiceResult.fromOption(o)
+        case f: Failure =>
+          log.info("Got Failure Response")
+          f
+        case other =>
+          log.info("Final Response is {} ", other)
+          FullResult(other)
       }.
       recover(toFailure).
       pipeTo(sender())

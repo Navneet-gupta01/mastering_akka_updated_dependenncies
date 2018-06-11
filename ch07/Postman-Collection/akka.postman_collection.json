@@ -17,7 +17,7 @@
 				],
 				"body": {},
 				"url": {
-					"raw": "http://localhost:8080/api/user/31e46a20-eb7c-4f36-b99f-831a942160e2",
+					"raw": "http://localhost:8080/api/user/qwertyuiop123@gmail.com",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -26,7 +26,7 @@
 					"path": [
 						"api",
 						"user",
-						"31e46a20-eb7c-4f36-b99f-831a942160e2"
+						"qwertyuiop123@gmail.com"
 					]
 				}
 			},
@@ -44,7 +44,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"title\" : \"Grt Lets Check It Out\",\n\t\"author\": \"Navneet Gupta\",\n\t\"cost\" : 93.24,\n\t\"tags\": [\"Pocket\",\"Checkout\"]\n}"
+					"raw": "{\n\t\"title\" : \"Grt Lets asasassaas It Out1\",\n\t\"author\": \"Navneet Gupta\",\n\t\"cost\" : 93.24,\n\t\"tags\": [\"Pocket\",\"Checkout\"]\n}"
 				},
 				"url": {
 					"raw": "http://localhost:8080/api/book",
@@ -73,7 +73,7 @@
 				],
 				"body": {},
 				"url": {
-					"raw": "http://localhost:8080/api/user?email=qwertyuiop@gmail.com",
+					"raw": "http://localhost:8080/api/user?name=Navneet",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -85,8 +85,8 @@
 					],
 					"query": [
 						{
-							"key": "email",
-							"value": "qwertyuiop@gmail.com"
+							"key": "name",
+							"value": "Navneet"
 						}
 					]
 				}
@@ -105,10 +105,10 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"firstName\" : \"Mr.\",\n\t\"lastName\": \"Gupta\"\n}"
+					"raw": "{\n\t\"firstName\" : \"Mr. Navnneet\",\n\t\"lastName\": \" Kumar Gupta\"\n}"
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/user/qwertyuiop@gmail.com",
+					"raw": "http://localhost:8080/api/user/qwertyuiop123@gmail.com",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -117,7 +117,7 @@
 					"path": [
 						"api",
 						"user",
-						"qwertyuiop@gmail.com"
+						"qwertyuiop123@gmail.com"
 					]
 				}
 			},
@@ -138,7 +138,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/user/qwertyuiop@gmail.com",
+					"raw": "http://localhost:8080/api/user/qwertyuiop123@gmail.com",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -147,7 +147,7 @@
 					"path": [
 						"api",
 						"user",
-						"qwertyuiop@gmail.com"
+						"qwertyuiop123@gmail.com"
 					]
 				}
 			},
@@ -194,10 +194,10 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"title\" : \"Mastering Akka\",\n\t\"author\": \"Navneet Gupta\",\n\t\"cost\" : 93.24\n\t\"tags\": [\"Packet\",\"Mastering-Akka\"]\n}"
+					"raw": "{\n  \"title\" : \"Mastering Akka\",\n  \"author\": \"Navneet Gupta\",\n  \"cost\" : 93.24\n  \"tags\": [\"Packet\",\"Mastering-Akka\"]\n}"
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/book/2b10bc85-efaa-495d-8052-7593c2f6f40e",
+					"raw": "http://localhost:8080/api/book/03dd08f9-146c-47a9-a9cc-d6f2026fdd6d",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -206,7 +206,7 @@
 					"path": [
 						"api",
 						"book",
-						"2b10bc85-efaa-495d-8052-7593c2f6f40e"
+						"03dd08f9-146c-47a9-a9cc-d6f2026fdd6d"
 					]
 				}
 			},
@@ -297,7 +297,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/book/2b10bc85-efaa-495d-8052-7593c2f6f40e/tag/Jacket",
+					"raw": "http://localhost:8080/api/book/03dd08f9-146c-47a9-a9cc-d6f2026fdd6d/tag/Pocket43",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -306,9 +306,9 @@
 					"path": [
 						"api",
 						"book",
-						"2b10bc85-efaa-495d-8052-7593c2f6f40e",
+						"03dd08f9-146c-47a9-a9cc-d6f2026fdd6d",
 						"tag",
-						"Jacket"
+						"Pocket43"
 					]
 				}
 			},
@@ -326,10 +326,10 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"title\" : \"Mastering Akka\",\n\t\"author\": \"Navneet Gupta\",\n\t\"cost\" : 93.24\n\t\"tags\": [\"Packet\",\"Mastering-Akka\"]\n}"
+					"raw": "{\n  \"title\" : \"Mastering Akka\",\n  \"author\": \"Navneet Gupta\",\n  \"cost\" : 93.24\n  \"tags\": [\"Packet\",\"Mastering-Akka\"]\n}"
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/book/2b10bc85-efaa-495d-8052-7593c2f6f40e/tag/Pocket",
+					"raw": "http://localhost:8080/api/book/03dd08f9-146c-47a9-a9cc-d6f2026fdd6d/tag/Pocket",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -338,7 +338,7 @@
 					"path": [
 						"api",
 						"book",
-						"2b10bc85-efaa-495d-8052-7593c2f6f40e",
+						"03dd08f9-146c-47a9-a9cc-d6f2026fdd6d",
 						"tag",
 						"Pocket"
 					]
@@ -361,7 +361,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/book/2c0e6df2-ec9b-497b-9e7a-6f9279679c36/inventory/10",
+					"raw": "http://localhost:8080/api/book/8332ace4-1bc8-493a-a235-6567b9e704ed/inventory/10",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -370,7 +370,7 @@
 					"path": [
 						"api",
 						"book",
-						"2c0e6df2-ec9b-497b-9e7a-6f9279679c36",
+						"8332ace4-1bc8-493a-a235-6567b9e704ed",
 						"inventory",
 						"10"
 					]
@@ -393,7 +393,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://localhost:8080/api/book/2b10bc85-efaa-495d-8052-7593c2f6f40e",
+					"raw": "http://localhost:8080/api/book/916d4954-924e-485d-9197-c04fb7f04534",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -402,7 +402,7 @@
 					"path": [
 						"api",
 						"book",
-						"2b10bc85-efaa-495d-8052-7593c2f6f40e"
+						"916d4954-924e-485d-9197-c04fb7f04534"
 					]
 				}
 			},
@@ -420,7 +420,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"userEmail\" : \"vbmbmmbb@gmail.com\",\n\t\"cardInfo\": {\n\t\t\"cardHolder\" : \"Navneet Gupta\",\n\t\t\"cardType\" : \"VISA\",\n\t\t\"cardNumber\" : \"4321234512342345\",\n\t\t\"expiration\": \"2004-09-04T17:05:22.000Z\"\n\t},\n\t\"lineItems\": [\n\t\t{\n\t\t\t\"bookId\": \"2c0e6df2-ec9b-497b-9e7a-6f9279679c36\",\n\t\t\t\"quantity\": 10\n\t\t}\n\t]\n}"
+					"raw": "{\n\t\"userEmail\" : \"qwertyuiop@gmail.com\",\n\t\"cardInfo\": {\n\t\t\"cardHolder\" : \"Navneet Gupta\",\n\t\t\"cardType\" : \"VISA\",\n\t\t\"cardNumber\" : \"4321234512342345\",\n\t\t\"expiration\": \"2018-06-11T17:51:07.109+0400\"\n\t},\n\t\"lineItems\": [\n\t\t{\n\t\t\t\"bookId\": \"8332ace4-1bc8-493a-a235-6567b9e704ed\",\n\t\t\t\"quantity\": 10\n\t\t},{\n\t\t\t\"bookId\": \"165393b1-ff74-4305-974c-3407f5977d6c\",\n\t\t\t\"quantity\": 30\n\t\t}\n\t]\n}"
 				},
 				"url": {
 					"raw": "http://localhost:8080/api/order/",
@@ -450,7 +450,7 @@
 				],
 				"body": {},
 				"url": {
-					"raw": "http://localhost:8080/api/order/bd38b62b-6a58-44e0-ba26-b16e56cd6549",
+					"raw": "http://localhost:8080/api/order/7e8f69a6-81fb-49a0-b4ab-27f117d6d253",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -459,7 +459,7 @@
 					"path": [
 						"api",
 						"order",
-						"bd38b62b-6a58-44e0-ba26-b16e56cd6549"
+						"7e8f69a6-81fb-49a0-b4ab-27f117d6d253"
 					]
 				}
 			},
@@ -477,7 +477,7 @@
 				],
 				"body": {},
 				"url": {
-					"raw": "http://localhost:8080/api/order?userId=qwertyuiop@gmail.com",
+					"raw": "http://localhost:8080/api/order?email=qwertyuiop@gmail.com",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -489,7 +489,7 @@
 					],
 					"query": [
 						{
-							"key": "userId",
+							"key": "email",
 							"value": "qwertyuiop@gmail.com"
 						}
 					]
@@ -509,7 +509,7 @@
 				],
 				"body": {},
 				"url": {
-					"raw": "http://localhost:8080/api/order?bookId=2c0e6df2-ec9b-497b-9e7a-6f9279679c36",
+					"raw": "http://localhost:8080/api/order?bookId=8332ace4-1bc8-493a-a235-6567b9e704ed",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -522,7 +522,7 @@
 					"query": [
 						{
 							"key": "bookId",
-							"value": "2c0e6df2-ec9b-497b-9e7a-6f9279679c36"
+							"value": "8332ace4-1bc8-493a-a235-6567b9e704ed"
 						}
 					]
 				}
@@ -541,7 +541,7 @@
 				],
 				"body": {},
 				"url": {
-					"raw": "http://localhost:8080/api/order?bookTag=Pocket",
+					"raw": "http://localhost:8080/api/order?tag=Pocket",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -553,7 +553,7 @@
 					],
 					"query": [
 						{
-							"key": "bookTag",
+							"key": "tag",
 							"value": "Pocket"
 						}
 					]
@@ -573,7 +573,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"firstName\" : \"Navneet\",\n\t\"lastName\": \"Gupta\",\n\t\"email\" : \"qwertyuiop@gmail.com\"\n}"
+					"raw": "{\n  \"firstName\" : \"Navneet\",\n  \"lastName\": \"Gupta\",\n  \"email\" : \"qwertyuiop@gmail.com\"\n}"
 				},
 				"url": {
 					"raw": "http://localhost:8080/api/user",

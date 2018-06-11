@@ -3,7 +3,6 @@ package com.navneetgupta.bookstore.common
 import spray.json.JsonFormat
 import spray.json._
 import akka.pattern._
-import dispatch._
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 import com.typesafe.config.Config
@@ -13,7 +12,6 @@ import akka.actor.ExtensionIdProvider
 import akka.actor.AbstractActor.Receive
 import akka.actor.ExtendedActorSystem
 import java.nio.charset.Charset
-import org.json4s.JsonAST.JObject
 import akka.http.scaladsl.unmarshalling.Unmarshal
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.HttpRequest
@@ -24,6 +22,7 @@ import akka.http.scaladsl.model.Uri
 import akka.http.scaladsl.model.HttpMethods
 import akka.http.scaladsl.model.HttpEntity
 import akka.http.scaladsl.model.ContentTypes
+import scala.reflect.ClassTag
 
 object ElasticsearchApi extends BookstoreJsonProtocol {
   trait EsResponse
@@ -56,7 +55,7 @@ trait ElasticsearchSupport { me: BookstoreActor =>
   def entityType: String
   def baseUrl = s"${esSettings.rootUrl}/${indexRoot}/$entityType"
   //(implicit ec: ExecutionContext)
-  def callElasticsearch[RT: Manifest](req: HttpRequest)(implicit ec: ExecutionContext, mater: Materializer, unmarshaller: Unmarshaller[ResponseEntity, RT]): Future[RT] = {
+  def callElasticsearch[RT: ClassTag](req: HttpRequest)(implicit ec: ExecutionContext, mater: Materializer, unmarshaller: Unmarshaller[ResponseEntity, RT]): Future[RT] = {
     // Http.default(req.setContentType("application/json", Charset.defaultCharset()) OK as.String).map(resp => read[RT](resp))
     Http(context.system).
       singleRequest(req).

@@ -35,7 +35,7 @@ object LineItemStatus extends Enumeration {
 case class SalesOrderLineItemFO(lineItemNumber: Int, bookId: String, quantity: Int, cost: Double, status: LineItemStatus.Value)
 
 object SalesOrderFO {
-  def empty = new SalesOrderFO("", "", "", 0.0, Nil, new Date(0), new Date(0))
+  def empty = new SalesOrderFO("", "", "", 0.0, Nil, null, null)
 }
 case class SalesOrderFO(override val id: String, userId: String, creditTxnId: String, totalCost: Double, lineItems: List[SalesOrderLineItemFO], createTs: Date, modifyTs: Date, override val deleted: Boolean = false) extends EntityFieldsObject[String, SalesOrderFO] {
   override def assignId(id: String) = this.copy(id = id)

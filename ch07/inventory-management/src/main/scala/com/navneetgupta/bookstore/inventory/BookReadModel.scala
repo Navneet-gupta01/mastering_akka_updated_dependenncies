@@ -30,6 +30,7 @@ trait BookReadModel {
 class BookViewBuilder extends ViewBuilder[BookViewBuilder.BookRM] with BookReadModel with InventoryJsonProtocol {
   import Book.Event._
   import BookViewBuilder._
+  import context.dispatcher
 
   implicit val rmFormats = bookRmFormat
 
@@ -90,6 +91,7 @@ class BookView extends BookReadModel
       log.info("BookView FindBooksByAuthor for author: {}", author)
       log.info("=======================================================================================================================================================")
       val results = queryElasticsearch[BookRM](s"author:$author")
+      log.info("BookView FindBooksByAuthor for author: {} Response is {}", author, results)
       pipeResponse(results)
     case FindBooksByTags(tags) =>
       log.info("=======================================================================================================================================================")
@@ -99,6 +101,7 @@ class BookView extends BookReadModel
       log.info("=======================================================================================================================================================")
 
       val results = queryElasticsearch[BookRM](query)
+      log.info("BookView FindBooksByTags for query: {} Response Got is {}", query, results)
       pipeResponse(results)
   }
 }
