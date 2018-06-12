@@ -1,0 +1,594 @@
+{
+	"info": {
+		"_postman_id": "218bd63d-1340-43c6-9399-117e0e5375fa",
+		"name": "Mastering-akka-mine",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "FindUserById",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/api/user/qwertyuiop123@gmail.com",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"user",
+						"qwertyuiop123@gmail.com"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Createbook",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"title\" : \"Grt Lets asasassaas It Out1\",\n\t\"author\": \"Navneet Gupta\",\n\t\"cost\" : 93.24,\n\t\"tags\": [\"Pocket\",\"Checkout\"]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/book",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"book"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "FindUserByEmail",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/api/user?name=Navneet",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"user"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "Navneet"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateUserInfo",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"firstName\" : \"Mr. Navnneet\",\n\t\"lastName\": \" Kumar Gupta\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/user/qwertyuiop123@gmail.com",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"user",
+						"qwertyuiop123@gmail.com"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteUser",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/user/qwertyuiop123@gmail.com",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"user",
+						"qwertyuiop123@gmail.com"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateBook",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"title\" : \"Akka 4\",\n\t\"author\": \"Gupta Ji\",\n\t\"cost\" : 93.24,\n\t\"tags\": [\"Pocket\",\"Akka\"]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/book",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"book"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "FindBook",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"title\" : \"Mastering Akka\",\n  \"author\": \"Navneet Gupta\",\n  \"cost\" : 93.24\n  \"tags\": [\"Packet\",\"Mastering-Akka\"]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/book/03dd08f9-146c-47a9-a9cc-d6f2026fdd6d",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"book",
+						"03dd08f9-146c-47a9-a9cc-d6f2026fdd6d"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "FindBooksByTags",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"title\" : \"Mastering Akka\",\n  \"author\": \"Navneet Gupta\",\n  \"cost\" : 93.24\n  \"tags\": [\"Packet\",\"Mastering-Akka\"]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/book?tag=Pocket",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"book"
+					],
+					"query": [
+						{
+							"key": "tag",
+							"value": "Pocket"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "FindBookByAuthor",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"title\" : \"Mastering Akka\",\n\t\"author\": \"Navneet Gupta\",\n\t\"cost\" : 93.24\n\t\"tags\": [\"Packet\",\"Mastering-Akka\"]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/book?author=Gupta",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"book"
+					],
+					"query": [
+						{
+							"key": "author",
+							"value": "Gupta"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddTagToBook",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/book/03dd08f9-146c-47a9-a9cc-d6f2026fdd6d/tag/Pocket43",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"book",
+						"03dd08f9-146c-47a9-a9cc-d6f2026fdd6d",
+						"tag",
+						"Pocket43"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RemoveTagFromBook",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"title\" : \"Mastering Akka\",\n  \"author\": \"Navneet Gupta\",\n  \"cost\" : 93.24\n  \"tags\": [\"Packet\",\"Mastering-Akka\"]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/book/03dd08f9-146c-47a9-a9cc-d6f2026fdd6d/tag/Pocket",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"book",
+						"03dd08f9-146c-47a9-a9cc-d6f2026fdd6d",
+						"tag",
+						"Pocket"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddInventoryToBook",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/book/8332ace4-1bc8-493a-a235-6567b9e704ed/inventory/10",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"book",
+						"8332ace4-1bc8-493a-a235-6567b9e704ed",
+						"inventory",
+						"10"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteBook",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/book/916d4954-924e-485d-9197-c04fb7f04534",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"book",
+						"916d4954-924e-485d-9197-c04fb7f04534"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateOrder",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"userEmail\" : \"qwertyuiop@gmail.com\",\n\t\"cardInfo\": {\n\t\t\"cardHolder\" : \"Navneet Gupta\",\n\t\t\"cardType\" : \"VISA\",\n\t\t\"cardNumber\" : \"4321234512342345\",\n\t\t\"expiration\": \"2018-06-11T17:51:07.109+0400\"\n\t},\n\t\"lineItems\": [\n\t\t{\n\t\t\t\"bookId\": \"8332ace4-1bc8-493a-a235-6567b9e704ed\",\n\t\t\t\"quantity\": 10\n\t\t},{\n\t\t\t\"bookId\": \"165393b1-ff74-4305-974c-3407f5977d6c\",\n\t\t\t\"quantity\": 30\n\t\t}\n\t]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/order/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"order",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "FindOrderById",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/api/order/7e8f69a6-81fb-49a0-b4ab-27f117d6d253",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"order",
+						"7e8f69a6-81fb-49a0-b4ab-27f117d6d253"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "FindOrderForUser",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/api/order?email=qwertyuiop@gmail.com",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"order"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "qwertyuiop@gmail.com"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "FindOrderForBook",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/api/order?bookId=8332ace4-1bc8-493a-a235-6567b9e704ed",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"order"
+					],
+					"query": [
+						{
+							"key": "bookId",
+							"value": "8332ace4-1bc8-493a-a235-6567b9e704ed"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "FindOrderByBookTag",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/api/order?tag=Pocket",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"order"
+					],
+					"query": [
+						{
+							"key": "tag",
+							"value": "Pocket"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CreateUSer",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"firstName\" : \"Navneet\",\n  \"lastName\": \"Gupta\",\n  \"email\" : \"qwertyuiop@gmail.com\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/user",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"user"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

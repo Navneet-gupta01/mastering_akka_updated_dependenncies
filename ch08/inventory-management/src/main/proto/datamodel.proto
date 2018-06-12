@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+option java_package = "com.navneetgupta.bookstore.inventory";
+option java_outer_classname = "Datamodel";
+option optimize_for = SPEED;
+
+ 
+message Book {
+  string id = 1;
+  string title = 2;
+  string author = 3;
+  repeated string tag = 4;
+  double cost = 5;
+  int32 inventoryAmount = 6;
+  int64 createTs = 7;
+  int64 modifyTs = 8;
+  bool deleted = 9;
+}
+
+message BookCreated{
+  Book book = 1;
+}
+
+message TagAdded{
+  string tag = 1;
+}
+
+message TagRemoved{
+  string tag = 1;
+}
+
+message InventoryAdded{
+  int32 amount = 1;
+}
+
+message InventoryAllocated{
+  string orderId = 1;
+  int32 amount = 2;
+  string bookId = 3;
+}
+
+message InventoryBackordered{
+  string orderId = 1;
+  string bookId = 2;
+}
+
+message BookDeleted{
+  string id = 1;
+}
