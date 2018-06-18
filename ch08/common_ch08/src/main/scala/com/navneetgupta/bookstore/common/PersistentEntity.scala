@@ -13,24 +13,56 @@ import akka.actor.PoisonPill
 import com.typesafe.config.Config
 import java.util.concurrent.TimeUnit
 import scala.concurrent.duration._
+import akka.cluster.sharding.ShardRegion
+import akka.actor.ActorSystem
+import akka.cluster.sharding.ShardRegion.Passivate
+import akka.cluster.sharding.ClusterSharding
+import akka.cluster.sharding.ClusterShardingSettings
 
 trait EntityEvent extends Serializable with DatamodelWriter {
   def entityType: String
 }
-
+trait EntityCommand {
+  def entityId: String
+}
 object PersistentEntity {
-  case object GetState
-  case object MarkAsDeleted
+  case object StopEntity
+  case class GetState(id: String) extends EntityCommand {
+    def entityId = id
+  }
+  case class MarkAsDeleted(id: String) extends EntityCommand {
+    def entityId = id
+  }
+
+  class PersistentEntityIdExtractor(maxShards: Int) {
+    val extractEntityId: ShardRegion.ExtractEntityId = {
+      case ec: EntityCommand => (ec.entityId, ec)
+    }
+
+    val extractShardId: ShardRegion.ExtractShardId = {
+      case ec: EntityCommand =>
+        (math.abs(ec.entityId.hashCode) % maxShards).toString
+    }
+  }
+
+  object PersistentEntityIdExtractor {
+
+    def apply(system: ActorSystem): PersistentEntityIdExtractor = {
+      val maxShards = system.settings.config.getInt("maxShards")
+      new PersistentEntityIdExtractor(maxShards)
+    }
+  }
 
   def getPersistentEntityTimeout(config: Config, timeUnit: TimeUnit): Duration =
     Duration.create(config.getDuration("persistent-entity-timeout", TimeUnit.SECONDS), timeUnit)
 
 }
 
-abstract class PersistentEntity[FO <: EntityFieldsObject[String, FO]: ClassTag](id: String) extends PersistentActor with ActorLogging {
+abstract class PersistentEntity[FO <: EntityFieldsObject[String, FO]: ClassTag] extends PersistentActor with ActorLogging {
   import PersistentEntity._
   import scala.concurrent.duration._
 
+  val id = self.path.name
   val entityType = getClass.getSimpleName
   var state: FO = initialState
   var eventsSinceLastSnapshot = 0
@@ -64,13 +96,16 @@ abstract class PersistentEntity[FO <: EntityFieldsObject[String, FO]: ClassTag](
   def standardCommandHandling: Receive = {
     case ReceiveTimeout =>
       log.info("{} entity with id {} is being passivated due to inactivity", entityType, id)
-      context stop self
+      context.parent ! Passivate(stopMessage = StopEntity)
     //self ! PoisonPill
+    case StopEntity =>
+      log.info("{} entity with id {} is now being stopped due to inactivity", entityType, id)
+      context stop self
     case any if !isAcceptingCommand(any) =>
       log.warning("Not allowing action {} on a deleted entity or an entity in the initial state with id {}", any, id)
       sender() ! stateResponse()
 
-    case GetState =>
+    case GetState(id) =>
       sender() ! stateResponse()
     case MarkAsDeleted =>
       newDeleteEvent match {
@@ -140,22 +175,22 @@ abstract class PersistentEntity[FO <: EntityFieldsObject[String, FO]: ClassTag](
 }
 
 abstract class Aggregate[FO <: EntityFieldsObject[String, FO], E <: PersistentEntity[FO]: ClassTag] extends BookstoreActor {
-  def lookupOrCreateChild(id: String) = {
-    val name = entityActorName(id)
-    context.child(name).getOrElse {
-      log.info("Creating new {} actor to handle a request for id {}", entityName, id)
-      context.actorOf(entityProps(id), name)
-    }
-  }
+
+  val idExtractor = PersistentEntity.PersistentEntityIdExtractor(context.system)
+  val entityShardRegion =
+    ClusterSharding(context.system).start(
+      typeName = entityName,
+      entityProps = entityProps,
+      settings = ClusterShardingSettings(context.system),
+      extractEntityId = idExtractor.extractEntityId,
+      extractShardId = idExtractor.extractShardId)
 
   def forwardCommand(id: String, msg: Any): Unit = {
-    val entity = lookupOrCreateChild(id)
-    entity.forward(msg)
+    //val entity = lookupOrCreateChild(id)
+    entityShardRegion.forward(msg)
   }
 
-  def entityProps(id: String): Props
-
-  private def entityActorName(id: String): String = s"${entityName.toLowerCase}-${id}"
+  def entityProps: Props
 
   private def entityName = {
     val entityTag = implicitly[ClassTag[E]]

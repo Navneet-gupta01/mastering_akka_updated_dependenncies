@@ -39,12 +39,13 @@ class CustomerRelationsManager extends Aggregate[UserFO, User] {
   override def receive = {
     case FindUserByEmail(email) =>
       log.info("Finding User by email {}", email)
-      val user = lookupOrCreateChild(email)
-      forwardCommand(email, GetState)
+
+      forwardCommand(email, GetState(email))
     case CreateUser(input) =>
-      val user = lookupOrCreateChild(input.email)
+      //val user = lookupOrCreateChild(input.email)
+      //Check uniqueness of email here
       implicit val timeout = Timeout(5 seconds)
-      val stateFut = (user ? GetState).mapTo[ServiceResult[UserFO]]
+      val stateFut = (entityShardRegion ? GetState(input.email)).mapTo[ServiceResult[UserFO]]
       val caller = sender()
       stateFut onComplete {
         case util.Success(FullResult(user)) =>
@@ -52,17 +53,17 @@ class CustomerRelationsManager extends Aggregate[UserFO, User] {
 
         case util.Success(EmptyResult) =>
           val fo = UserFO(input.email, input.firstName, input.lastName, new Date, new Date)
-          user.tell(Command.CreateUser(fo), caller)
+          entityShardRegion.tell(Command.CreateUser(fo), caller)
 
         case _ =>
           caller ! Failure(FailureType.Service, ServiceResult.UnexpectedFailure)
       }
     case UpdateUser(email, input) =>
-      forwardCommand(email, Command.UpdatePersonalInfo(input))
+      forwardCommand(email, Command.UpdatePersonalInfo(input, email))
 
     case DeleteUser(email) =>
       forwardCommand(email, MarkAsDeleted)
   }
 
-  override def entityProps(email: String): akka.actor.Props = User.props(email)
+  override def entityProps: akka.actor.Props = User.props
 }

@@ -36,7 +36,7 @@ object ViewBuilder {
   case class InsertAction(id: String,
                           rm: ReadModelObject) extends IndexAction
   case class NoAction(id: String) extends IndexAction
-  case object DeferredCreate extends IndexAction
+  //case object DeferredCreate extends IndexAction
   case class LatestOffsetResult(offset: Option[Offset])
   case class EnvelopeAndAction(env: EventEnvelope,
                                action: IndexAction)

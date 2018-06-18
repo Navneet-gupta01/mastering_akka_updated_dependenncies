@@ -28,6 +28,10 @@ import com.navneetgupta.bookstore.common.EntityEvent
 import com.navneetgupta.bookstore.order.Datamodel._
 import com.navneetgupta.bookstore.common.DatamodelReader
 import com.navneetgupta.bookstore.users.UserFO
+import com.navneetgupta.bookstore.credit.CreditTransactionStatus
+import com.navneetgupta.bookstore.common.EntityCommand
+import com.navneetgupta.bookstore.credit.CreditAssociate
+import com.navneetgupta.bookstore.credit.CreditCardTransactionFO
 
 object LineItemStatus extends Enumeration {
   val Unknown, Approved, BackOrdered = Value
@@ -47,14 +51,20 @@ object SalesOrder {
 
   val EntityType = "salesorder"
 
-  def props(id: String) = Props(classOf[SalesOrder], id)
+  def props = Props[SalesOrder]
 
   case class LineItemRequest(bookId: String, quantity: Int)
 
   object Command {
-    case class CreateOrder(newOrderId: String, userEmail: String, lineItems: List[LineItemRequest], cardInfo: CreditCardInfo)
-    case class CreateValidatedOrder(order: SalesOrderFO)
-    case class UpdateLineItemStatus(bookId: String, status: LineItemStatus.Value)
+    case class CreateOrder(newOrderId: String, userEmail: String, lineItems: List[LineItemRequest], cardInfo: CreditCardInfo) extends EntityCommand {
+      def entityId = newOrderId
+    }
+    case class CreateValidatedOrder(order: SalesOrderFO) extends EntityCommand {
+      def entityId = order.id
+    }
+    case class UpdateLineItemStatus(bookId: String, status: LineItemStatus.Value, orderId: String) extends EntityCommand {
+      def entityId = orderId
+    }
   }
 
   object Event {
@@ -119,7 +129,8 @@ object SalesOrder {
     }
   }
 }
-class SalesOrder(idInput: String) extends PersistentEntity[SalesOrderFO](idInput) {
+
+class SalesOrder extends PersistentEntity[SalesOrderFO] {
   import context.dispatcher
   import SalesOrder._
   import EntityActor._
@@ -135,7 +146,7 @@ class SalesOrder(idInput: String) extends PersistentEntity[SalesOrderFO](idInput
     case Command.CreateValidatedOrder(order) =>
       //Now we can persist the complete order
       persist(Event.OrderCreated(order))(handleEventAndRespond())
-    case Command.UpdateLineItemStatus(bookId, status) =>
+    case Command.UpdateLineItemStatus(bookId, status, orderId) =>
       val itemNumber = state.lineItems.
         find(_.bookId == bookId).
         map(_.lineItemNumber).

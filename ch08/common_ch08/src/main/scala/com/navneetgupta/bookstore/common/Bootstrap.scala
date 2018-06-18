@@ -1,6 +1,11 @@
 package com.navneetgupta.bookstore.common
 
 import akka.actor.ActorSystem
+import akka.actor.PoisonPill
+import akka.actor.Props
+import akka.cluster.singleton.ClusterSingletonManager
+import akka.actor.ActorRef
+import akka.cluster.singleton.ClusterSingletonManagerSettings
 
 /**
  * Trait that defines a class that will boot up actors from within a specific services module
@@ -14,4 +19,15 @@ trait Bootstrap {
    * @return a List of BookstorePlans to add as plans into the server
    */
   def bootstrap(system: ActorSystem): List[BookstoreRoutesDefinition]
+
+  def startSingleton(system: ActorSystem, props: Props,
+                     managerName: String, terminationMessage: Any = PoisonPill): ActorRef = {
+
+    system.actorOf(
+      ClusterSingletonManager.props(
+        singletonProps = props,
+        terminationMessage = terminationMessage,
+        settings = ClusterSingletonManagerSettings(system)),
+      managerName)
+  }
 }

@@ -15,6 +15,7 @@ import com.navneetgupta.bookstore.user.Datamodel
 import com.navneetgupta.bookstore.common.DatamodelReader
 import com.navneetgupta.bookstore.common.PersistentEntity
 import com.navneetgupta.bookstore.user.Datamodel.UserCreated
+import com.navneetgupta.bookstore.common.EntityCommand
 
 object UserFO {
   def empty = new UserFO("", "", "", null, null)
@@ -32,8 +33,12 @@ object User {
   case class UserInput(firstName: String, lastName: String)
 
   object Command {
-    case class CreateUser(user: UserFO)
-    case class UpdatePersonalInfo(input: UserInput)
+    case class CreateUser(user: UserFO) extends EntityCommand {
+      def entityId = user.email
+    }
+    case class UpdatePersonalInfo(input: UserInput, email: String) extends EntityCommand {
+      def entityId = email
+    }
   }
 
   object Event {
@@ -103,10 +108,10 @@ object User {
     }
   }
 
-  def props(id: String) = Props(classOf[User], id)
+  def props = Props[User]
 }
 
-class User(email: String) extends PersistentEntity[UserFO](email) {
+class User extends PersistentEntity[UserFO] {
 
   import User._
   import context.dispatcher
@@ -122,12 +127,12 @@ class User(email: String) extends PersistentEntity[UserFO](email) {
     case _                      => false
   }
 
-  override def newDeleteEvent: Option[EntityEvent] = Some(Event.UserDeleted(email))
+  override def newDeleteEvent: Option[EntityEvent] = Some(Event.UserDeleted(id))
 
   override def additionalCommandHandling: Receive = {
     case Command.CreateUser(user) =>
       persist(Event.UserCreated(user)) { handleEventAndRespond() }
-    case Command.UpdatePersonalInfo(input) =>
+    case Command.UpdatePersonalInfo(input, email) =>
       persist(Event.PersonalInfoUpdated(input.firstName, input.lastName)) { handleEventAndRespond() }
   }
 

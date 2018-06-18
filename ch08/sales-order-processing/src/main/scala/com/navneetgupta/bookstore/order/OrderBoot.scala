@@ -9,7 +9,8 @@ class OrderBoot extends Bootstrap {
 
     val salesAssociate = system.actorOf(SalesAssociate.props, SalesAssociate.Name)
     val salesOrderView = system.actorOf(SalesOrderView.props, SalesOrderView.Name)
-    system.actorOf(SalesOrderViewBuilder.props, SalesOrderViewBuilder.Name)
+    startSingleton(system, SalesOrderViewBuilder.props, SalesOrderViewBuilder.Name)
+    startSingleton(system, OrderStatusEventListener.props(salesAssociate), OrderStatusEventListener.Name)
     List(new SalesOrderEndpoint(salesAssociate, salesOrderView))
   }
 }

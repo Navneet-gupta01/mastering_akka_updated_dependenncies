@@ -37,15 +37,15 @@ class CreditAssociate extends Aggregate[CreditCardTransactionFO, CreditTransacti
         case util.Success(result) =>
           val id = UUID.randomUUID().toString
           val fo = CreditCardTransactionFO(id, info, amount, CreditTransactionStatus.Approved, Some(result.confirmationCode), new Date)
-          val txn = lookupOrCreateChild(id)
-          txn.tell(CreditTransaction.Command.CreateCreditTransaction(fo), caller)
+          //val txn = lookupOrCreateChild(id)
+          entityShardRegion.tell(CreditTransaction.Command.CreateCreditTransaction(fo), caller)
 
         case util.Failure(ex) =>
           log.error(ex, "Error performing credit charging")
           caller ! Failure(FailureType.Service, ServiceResult.UnexpectedFailure)
       }
   }
-  override def entityProps(id: String): Props = CreditTransaction.props(id)
+  override def entityProps: Props = CreditTransaction.props
 
   //  def chargeCard(info: CreditCardInfo, amount: Double) = {
   //    val jsonBody = write(ChargeRequest(info.cardHolder, info.cardType, info.cardNumber, info.expiration, amount))

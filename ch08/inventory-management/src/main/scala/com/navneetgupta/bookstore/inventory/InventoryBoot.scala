@@ -10,7 +10,7 @@ class InventoryBoot extends Bootstrap {
 
     val inventoryClerk = system.actorOf(InventoryClerk.props, InventoryClerk.Name)
     val bookView = system.actorOf(BookView.props, BookView.Name)
-    system.actorOf(BookViewBuilder.props, BookViewBuilder.Name)
+    startSingleton(system, BookViewBuilder.props, BookViewBuilder.Name)
     List(new InventoryEndpoint(inventoryClerk, bookView))
   }
 }

@@ -34,8 +34,9 @@ class CassandraSession(system: ActorSystem, config: Config, init: Session => Fut
     override def apply(key: String): Future[PreparedStatement] =
       underlying().flatMap { s =>
         val prepared: Future[PreparedStatement] = s.prepareAsync(key)
-        prepared.onFailure {
-          case _ =>
+        prepared.onComplete {
+          case Success(_) => ()
+          case ScalaFailure(_) =>
             // this is async, i.e. we are not updating the map from the compute function
             preparedStatements.remove(key)
         }
@@ -50,7 +51,10 @@ class CassandraSession(system: ActorSystem, config: Config, init: Session => Fut
     def initialize(session: Future[Session]): Future[Session] = {
       session.flatMap { s =>
         val result = init(s)
-        result.onFailure { case _ => close(s) }
+        result.onComplete {
+          case ScalaFailure(_) => close(s)
+          case Success(_)      => ()
+        }
         result.map(_ => s)
       }
     }
@@ -60,9 +64,9 @@ class CassandraSession(system: ActorSystem, config: Config, init: Session => Fut
       if (existing == null) {
         val s = initialize(Future(cluster.connect()))
         if (_underlyingSession.compareAndSet(null, s)) {
-          s.onFailure {
-            case e =>
-              _underlyingSession.compareAndSet(s, null)
+          s.onComplete {
+            case Success(_)      => ()
+            case ScalaFailure(e) => log.warning("Failed to connect to Cassandra and initialize. It will be retried on demand. Caused by: {}", e.getMessage)
           }
           system.registerOnTermination {
             s.foreach(close)
@@ -80,8 +84,9 @@ class CassandraSession(system: ActorSystem, config: Config, init: Session => Fut
     val existing = _underlyingSession.get
     if (existing == null) {
       val result = retry(() => setup())
-      result.onFailure {
-        case e => log.warning("Failed to connect to Cassandra and initialize. It will be retried on demand. Caused by: {}", e.getMessage)
+      result.onComplete {
+        case Success(_)      => ()
+        case ScalaFailure(e) => log.warning("Failed to connect to Cassandra and initialize. It will be retried on demand. Caused by: {}", e.getMessage)
       }
       result
     } else

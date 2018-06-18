@@ -12,9 +12,10 @@ import com.navneetgupta.bookstore.common.EntityActor.InitializedData
 import com.navneetgupta.bookstore.common.PersistentEntity
 import com.navneetgupta.bookstore.common.EntityEvent
 import com.navneetgupta.bookstore.common.DatamodelReader
+import com.navneetgupta.bookstore.common.EntityCommand
 
 object BookFO {
-  def empty = new BookFO("", "", "", Nil, 0.0, 0, null, null)
+  def empty = new BookFO("", "", "", Nil, 0.0, 0, new Date(0), new Date(0))
 }
 case class BookFO(id: String, title: String, author: String, tags: List[String], cost: Double,
                   inventoryAmount: Int, createTs: Date, modifyTs: Date = new Date(), deleted: Boolean = false) extends EntityFieldsObject[String, BookFO] {
@@ -27,16 +28,19 @@ object Book {
   import collection.JavaConversions._
 
   val EntityType = "book"
-  def props(id: String) = Props(classOf[Book], id)
+  def props = Props[Book]
   val InventoryNotAvailError = ErrorMessage("inventory.notavailable", Some("Inventory for an item on an order can not be allocated"))
   val BookAlreadyCreated = ErrorMessage("book.alreadyexists", Some("This book has already been created and can not handle another CreateBook request"))
 
   object Command {
-    case class CreateBook(book: BookFO)
-    case class AddTag(tag: String)
-    case class RemoveTag(tag: String)
-    case class AddInventory(amount: Int)
-    case class AllocateInventory(orderId: String, amount: Int)
+    case class CreateBook(book: BookFO) extends EntityCommand {
+      def entityId = book.id
+    }
+    trait BookIdEntityCommand extends EntityCommand { val bookId: String; def entityId = bookId }
+    case class AddTag(tag: String, bookId: String) extends BookIdEntityCommand
+    case class RemoveTag(tag: String, bookId: String) extends BookIdEntityCommand
+    case class AddInventory(amount: Int, bookId: String) extends BookIdEntityCommand
+    case class AllocateInventory(orderId: String, amount: Int, bookId: String) extends BookIdEntityCommand
   }
 
   object Event {
@@ -173,7 +177,7 @@ object Book {
   }
 }
 
-private[inventory] class Book(idInput: String) extends PersistentEntity[BookFO](idInput) {
+private[inventory] class Book extends PersistentEntity[BookFO] {
 
   import Book.Command._
   import Book.Event._
@@ -192,19 +196,21 @@ private[inventory] class Book(idInput: String) extends PersistentEntity[BookFO](
       } else {
         persist(BookCreated(book))(handleEventAndRespond())
       }
-    case AddTag(tag) =>
-      if (state.tags.contains(tag))
+    case AddTag(tag, id) =>
+      if (state.tags.contains(tag)) {
+        log.warning("Not adding tag {} to book {}, tag already exists", tag, state.id)
         sender() ! stateResponse()
-      else
+      } else
         persist(TagAdded(tag))(handleEventAndRespond())
-    case RemoveTag(tag) =>
-      if (!state.tags.contains(tag))
+    case RemoveTag(tag, id) =>
+      if (!state.tags.contains(tag)) {
+        log.warning("Cannot remove tag {} to book {}, tag not present", tag, state.id)
         sender() ! stateResponse()
-      else
+      } else
         persist(TagRemoved(tag))(handleEventAndRespond())
-    case AddInventory(amount) =>
+    case AddInventory(amount, id) =>
       persist(InventoryAdded(amount))(handleEventAndRespond())
-    case AllocateInventory(orderId, amount) =>
+    case AllocateInventory(orderId, amount, idInput) =>
       val event =
         if (amount > state.inventoryAmount) {
           InventoryBackordered(orderId, idInput)
@@ -241,7 +247,7 @@ private[inventory] class Book(idInput: String) extends PersistentEntity[BookFO](
     //
   }
 
-  override def newDeleteEvent = Some(BookDeleted(idInput))
+  override def newDeleteEvent = Some(BookDeleted(id))
 
   def isCreateMessage(cmd: Any): Boolean = cmd match {
     case cr: CreateBook => true

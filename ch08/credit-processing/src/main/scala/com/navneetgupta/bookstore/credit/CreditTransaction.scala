@@ -8,6 +8,7 @@ import com.navneetgupta.bookstore.common.EntityActor.FinishCreate
 import com.navneetgupta.bookstore.common.EntityEvent
 import com.navneetgupta.bookstore.common.DatamodelReader
 import com.navneetgupta.bookstore.common.PersistentEntity
+import com.navneetgupta.bookstore.common.EntityCommand
 
 object CreditTransactionStatus extends Enumeration {
   val Approved, Rejected = Value
@@ -25,10 +26,12 @@ case class CreditCardTransactionFO(override val id: String, cardInfo: CreditCard
 
 object CreditTransaction {
 
-  def props(id: String) = Props(classOf[CreditTransaction], id)
+  def props = Props[CreditTransaction]
 
   object Command {
-    case class CreateCreditTransaction(txn: CreditCardTransactionFO)
+    case class CreateCreditTransaction(txn: CreditCardTransactionFO) extends EntityCommand {
+      def entityId = txn.id
+    }
   }
   trait CreditTransactionEvent extends EntityEvent { def entityType = "creditTransaction" }
   object Event {
@@ -74,7 +77,7 @@ object CreditTransaction {
   }
 }
 
-class CreditTransaction(idInput: String) extends PersistentEntity[CreditCardTransactionFO](idInput) {
+class CreditTransaction extends PersistentEntity[CreditCardTransactionFO] {
   import CreditTransaction._
   import context.dispatcher
   import akka.pattern._
