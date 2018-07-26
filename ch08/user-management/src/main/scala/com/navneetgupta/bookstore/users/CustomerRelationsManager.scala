@@ -29,7 +29,7 @@ class CustomerRelationsManager extends Aggregate[UserFO, User] {
 
   import CustomerRelationsManager._
   import context.dispatcher
-  import com.navneetgupta.bookstore.common.EntityActor._
+  //    import com.navneetgupta.bookstore.common.EntityActor._
   import scala.concurrent.duration._
   import akka.pattern.ask
   import User._

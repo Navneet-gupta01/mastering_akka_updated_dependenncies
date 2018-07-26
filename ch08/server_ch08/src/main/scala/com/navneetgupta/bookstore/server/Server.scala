@@ -32,16 +32,7 @@ object Server extends App {
   val definedRoutes = endpoints.reduce(_ ~ _)
   val finalRoutes =
     pathPrefix("api")(definedRoutes) ~
-      PretentCreditCardService.routes //manually add in the pretend credit card service to the routing tree
-
-  //  val server = endpoints.foldRight(unfiltered.netty.Server.http(8080)) {
-  //    case (endpoint, serv) =>
-  //      log.info("Adding endpoint: {}", endpoint)
-  //      serv.plan(endpoint)
-  //  }
-  //
-  //  //Adding in the pretend credit card charging service too so that the app works
-  //  server.plan(PretentCreditCardService).run()
+      PretentCreditCardService.routes
 
   val serverSource =
     Http().bind(interface = "0.0.0.0", port = conf.getInt("httpPort"))
